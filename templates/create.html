@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Static Navigation - SB Admin</title>
+        <link href="../static/css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!--<script src="https://kit.fontawesome.com/e759ba39a0.js" crossorigin="anonymous"></script>-->
+    </head>
+    <body>
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="./index">SIRIUS's Firewall</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                CRUD
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="./create">Create</a>
+                                    <a class="nav-link" href="./index">Read & Update & Delete</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Pages
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                                        Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
+                                        </nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                        Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                    </a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav">
+                                            <a class="nav-link" href="401.html">401 Page</a>
+                                            <a class="nav-link" href="404.html">404 Page</a>
+                                            <a class="nav-link" href="500.html">500 Page</a>
+                                        </nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="charts.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Charts
+                            </a>
+                            <a class="nav-link" href="tables.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Start Bootstrap
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> IPTABLES-Create</h1>
+                       
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <p class="mb-0">
+                                    
+                                    <h2 style="text-align: center;">Create</h2>
+                                    
+                                <form method="post" id="create-form" action="/create" style="text-align: center;">
+                                    <label></label><br>
+                                    <div style="margin-bottom: 10px;">
+                                    <input type="radio" id="input_icon" name="traffic_type" value="input" required>
+                                    <label for="input_icon" style="display: inline-block;">
+                                        <img src="../static/icon/Inbound.png" alt="Input Icon" width="300" height="200">
+                                    </label>
+                                    
+                                    <input type="radio" id="forward_icon" name="traffic_type" value="forward" required>
+                                    <label for="forward_icon" style="display: inline-block;">
+                                        <img src="../static/icon/Pass.png" alt="Forward Icon" width="350" height="200">
+                                    </label>
+                                    
+                                    <input type="radio" id="output_icon" name="traffic_type" value="output" required>
+                                    <label for="output_icon" style="display: inline-block;">
+                                        <img src="../static/icon/Outbound.png" alt="Output Icon" width="300" height="200">
+                                    </label>
+                                    </div>
+                                </br>
+                                <br>
+
+                                <div style="margin-bottom: 10px;">
+                                <label for="action">동작:</label>
+                                <select id="action" name="action">
+                                    <option value="block">차단</option>
+                                    <option value="allow">허용</option>
+                                </select>
+                               
+                                <label for="priority">우선순위</label>
+                                <select id="priority" name="priority">
+                                    <option value="normal">보통</option>
+                                    <option value="special">우선</option>
+                                </select>
+                                
+                                
+                                <label for="protocol">프로토콜:</label>
+                                <select id="protocol" name="protocol">
+                                        <option value="tcp">TCP</option>
+                                        <option value="udp">UDP</option>
+                                        <option value="icmp">ICMP</option>
+                                        <option value="">ALL</option>
+                                    </select>
+                                
+                                
+                                
+                                <label for="application">어플리케이션 방화벽:</label>
+                                <select id="application" name="application">
+                                    <option value="xss">XSS</option>
+                                    <option value="sql">SQL_Injection</option>
+                                    <option value="no_application">사용안함</option>
+                                </select>
+                                </div>
+
+                                <br>    
+                                <div style="margin-bottom: 10px;">
+                                <label for="src_ip">출발지 IP 주소:</label>
+                                <input type="text" id="src_ip" name="src_ip" placeholder="예: 192.168.1.1" style="color: grey;">
+
+                                
+                                <label for="dst_ip">목적지 IP 주소:</label>
+                                <input type="text" id="dst_ip" name="dst_ip" placeholder="예: 192.168.1.1" style="color: grey;">
+                                </div>
+
+                                <br>
+                                
+                                
+                            
+                                
+                                <div style="margin-bottom: 10px;">
+                                <label for="src_port">출발지 포트 번호:</label>
+                                <input type="number" id="src_port" name="src_port" placeholder="예: 8080" style="color: grey;">
+
+                                <label for="dst_port">목적지 포트 번호:</label>
+                                <input type="number" id="dst_port" name="dst_port" placeholder="예: 8080" style="color: grey;">
+                                </div>
+                                
+                                </br>
+                                <!---
+                                <div style="margin-bottom: 10px;">
+                                <label for="in_interface">인바운드 인터페이스:</label>
+                                <input type="text" id="in_interface" name="in_interface" required>
+                                                        
+                                <label for="out_interface">아웃바운드 인터페이스:</label>
+                                <input type="text" id="out_interface" name="out_interface" required><br>
+                                </div>
+                                <br>
+                            -->
+
+                                
+                                    
+                                <button type="submit" class="submit-button">
+                                    Create <img src="../static/icon/submit.png" width="20" height="20">
+                                </button>
+                                </form>
+
+                            
+
+                                </p>
+                            </div>
+                        </div>
+                        <div style="height: 100vh"></div>
+                        <div class="card mb-4"><div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div></div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script>
+            window.onload = function() {
+                {% if success %}
+                    alert("규칙이 성공적으로 적용되었습니다.");
+                {% endif %}
+            };
+        </script>
+        <script>
+            document.getElementById("create-form").onsubmit = function() {
+                var srcIp = document.getElementById("src_ip").value;
+                var dstIp = document.getElementById("dst_ip").value;
+                var srcPort = document.getElementById("src_port").value;
+                var dstPort = document.getElementById("dst_port").value;
+                
+                if(srcIp!="")
+                {
+                if (!isValidIpAddress(srcIp)) {
+                    alert("출발지 IP 주소가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+                if(dstIp!="")
+                {
+                if (!isValidIpAddress(dstIp)) {
+                    alert("목적지 IP 주소가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+            
+                if(srcPort!="")
+                {
+                if (!isValidPort(srcPort)) {
+                    alert("출발지 포트 번호가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+                if(dstPort!="")
+                {
+                if (!isValidPort(dstPort)) {
+                    alert("목적지 포트 번호가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+            
+                return true; // 폼 제출
+            };
+            
+            function isValidIpAddress(ip) {
+                var ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+                return ipRegex.test(ip);
+            }
+            
+            function isValidPort(port) {
+                var portNum = parseInt(port);
+                return portNum >= 0 && portNum <= 65535;
+            }
+            </script>
+   
+    </body>
+</html>
