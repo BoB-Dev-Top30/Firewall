@@ -99,6 +99,7 @@ def update():
     print("가지고온 룰 번호", str(rule_number))
     print("가지고온 체인", str(chain_name))
     if request.method == 'POST':
+        # post일떄 가져옴
         rule_number = request.form.get('rule_number')
         chain_name = request.form.get("chain_name")
         rule = {"traffic_type":"","action":"", "src_ip":"", "dst_ip":"", "protocol":"", "src_port":"", "dst_port":"", "in_interface":"", "out_interface":""}
@@ -134,6 +135,7 @@ def update():
         return render_template("update.html", success=success)
     # 업데이트 로직
 
+    # 겟일때 렌더링
     return render_template("update.html", rule_number=rule_number, chain_name=chain_name)
 
 
