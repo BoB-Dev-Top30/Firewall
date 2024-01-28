@@ -196,6 +196,20 @@
         function updateAction(actionType, formId) {
             var form = document.getElementById(formId);
             var chainName = form.getAttribute('data-chain-name');
+
+            var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+            var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+
+            if (checkedCount === 0) {
+                alert("체크박스를 선택해주세요.");
+                return;
+            }
+
+            if (actionType === 'update' && checkedCount > 1) {
+                alert("1번에 1개씩만 업데이트 해주세요.");
+                return;
+            }
+            
             if (actionType === 'delete') {
                 form.action = "{{ url_for('delete_rule', chain_name='') }}" + chainName;
             } else if (actionType === 'update') {
