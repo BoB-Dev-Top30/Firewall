@@ -118,7 +118,7 @@
                                     
                                     <h2 style="text-align: center;">Create</h2>
                                     
-                                <form method="post" action="/create" style="text-align: center;">
+                                <form method="post" id="create-form" action="/create" style="text-align: center;">
                                     <label></label><br>
                                     <div style="margin-bottom: 10px;">
                                     <input type="radio" id="input_icon" name="traffic_type" value="input" required>
@@ -245,7 +245,56 @@
                 {% endif %}
             };
         </script>
-
+        <script>
+            document.getElementById("create-form").onsubmit = function() {
+                var srcIp = document.getElementById("src_ip").value;
+                var dstIp = document.getElementById("dst_ip").value;
+                var srcPort = document.getElementById("src_port").value;
+                var dstPort = document.getElementById("dst_port").value;
+                
+                if(srcIp!="")
+                {
+                if (!isValidIpAddress(srcIp)) {
+                    alert("출발지 IP 주소가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+                if(dstIp!="")
+                {
+                if (!isValidIpAddress(dstIp)) {
+                    alert("목적지 IP 주소가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+            
+                if(srcPort!="")
+                {
+                if (!isValidPort(srcPort)) {
+                    alert("출발지 포트 번호가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+                if(dstPort!="")
+                {
+                if (!isValidPort(dstPort)) {
+                    alert("목적지 포트 번호가 유효하지 않습니다.");
+                    return false; // 폼 제출 방지
+                }
+                }
+            
+                return true; // 폼 제출
+            };
+            
+            function isValidIpAddress(ip) {
+                var ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+                return ipRegex.test(ip);
+            }
+            
+            function isValidPort(port) {
+                var portNum = parseInt(port);
+                return portNum >= 0 && portNum <= 65535;
+            }
+            </script>
    
     </body>
 </html>
