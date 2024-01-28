@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 import subprocess
 
 # 자체 제작 모듈
@@ -60,9 +60,23 @@ def create():
 
 @app.route('/read')
 def read():
-    iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL']).decode('utf-8')
+    iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
     chains = parse_iptables(iptables_output)
     return render_template('read.html', chains=chains)
+
+
+@app.route('/delete_rule/<chain_name>', methods=['POST'])
+def delete_rule(chain_name):
+    selected_rules = request.form.getlist('rule_to_delete')
+    for rule_number in selected_rules:
+        try:
+            subprocess.run(['sudo', 'iptables', '-D', chain_name, rule_number], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            # 오류 처리
+
+    return redirect(url_for('read'))
+
 
 '''
 @app.route("/unblock_ip/<ip>", methods=["POST"])

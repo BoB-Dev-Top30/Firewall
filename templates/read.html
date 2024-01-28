@@ -121,24 +121,41 @@
     
                                     {% for chain_name, rules in chains.items() %}
                                     <h2>{{ chain_name }} Chain</h2>
+                                    <form method="post" action="{{url_for('delete_rule', chain_name=chain_name)}}">
                                     <table id="iptables-table">
                                         <tr>
+                                            <th>Select</th>
+                                            <th>Number</th>
                                             <th>Packets</th>
                                             <th>Bytes</th>
                                             <th>Target</th>
                                             <th>Protocol</th>
+                                            <th>Opt</th>
+                                            <th>In</th>
+                                            <th>Out</th>
+                                            <th>Source</th>
+                                            <th>Destination</th>
                                             <th>Details</th>
                                         </tr>
                                         {% for rule in rules %}
                                         <tr>
+                                            <td><input type="checkbox" name="rule_to_delete" value="{{ rule.num }}"></td>
+                                            <td>{{ rule.num }}</td>
                                             <td>{{ rule.packets }}</td>
                                             <td>{{ rule.bytes }}</td>
                                             <td>{{ rule.target }}</td>
                                             <td>{{ rule.protocol }}</td>
+                                            <td>{{ rule.opt }}</td>
+                                            <td>{{ rule.in }}</td>
+                                            <td>{{ rule.out }}</td>
+                                            <td>{{ rule.source }}</td>
+                                            <td>{{ rule.destination }}</td>
                                             <td>{{ rule.details }}</td>
                                         </tr>
                                         {% endfor %}
                                     </table>
+                                    <input type="submit" value="Delete Selected Rules">
+                                </form>
                                     {% endfor %}
                                     
                                 </p>
