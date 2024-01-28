@@ -8,12 +8,10 @@ from CRUD.Parse_Table import *
 
 app = Flask(__name__)
 
-blocked_ips = []
-
 
 @app.route("/")
 def home():
-    return render_template("crud.html")
+    return redirect(url_for('index'))
 
 '''
 @app.route("/block_ip", methods=["POST"])
@@ -26,9 +24,13 @@ def block_ip():
     subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-s", ip_to_block, "-j", "DROP"])
     return render_template("crud.html", blocked_ips=blocked_ips)
 '''
-@app.route("/create", methods=["POST"])
-def create():
+@app.route("/create", methods=["GET"])
+def create1():
+    return render_template("create.html")
 
+
+@app.route("/create", methods=["POST"])
+def create2():
     rule = {"traffic_type":"","action":"", "src_ip":"", "dst_ip":"", "protocol":"", "src_port":"", "dst_port":"", "in_interface":"", "out_interface":""}
     rule["traffic_type"] = request.form.get("traffic_type")
     rule["priority"] = request.form.get("priority")
@@ -56,27 +58,35 @@ def create():
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
-    return render_template("crud.html", success=success, blocked_ips=blocked_ips)
+    return render_template("create.html", success=success)
 
-@app.route('/read')
-def read():
+@app.route('/index')
+def index():
+    success = request.args.get('success', False)
     iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
     chains = parse_iptables(iptables_output)
-    return render_template('read.html', chains=chains)
+    return render_template('index.html', chains=chains, success=success)
 
 
 @app.route('/delete_rule/<chain_name>', methods=['POST'])
 def delete_rule(chain_name):
     selected_rules = request.form.getlist('rule_to_delete')
+
+    success = False
     for rule_number in selected_rules:
         try:
             subprocess.run(['sudo', 'iptables', '-D', chain_name, rule_number], check=True)
+            success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
+            # success = False
+            break
             # 오류 처리
 
-    return redirect(url_for('read'))
+    return redirect(url_for('index', success=success))
 
+if __name__ == "__main__":
+    app.run(debug=True)
 
 '''
 @app.route("/unblock_ip/<ip>", methods=["POST"])
@@ -86,11 +96,9 @@ def unblock_ip(ip):
     return render_template("crud.html", blocked_ips=blocked_ips)
 '''
 
-if __name__ == "__main__":
-    app.run(debug=True)
 
 
-
+'''
 @app.route("/unblock_ip/<ip>", methods=["POST"])
 def unblock_ip(ip):
     blocked_ips.remove(ip)
@@ -98,3 +106,4 @@ def unblock_ip(ip):
     return render_template("crud.html", blocked_ips=blocked_ips)
 if __name__ == "__main__":
     app.run(debug=True)
+    '''

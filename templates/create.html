@@ -55,8 +55,9 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                                    <a class="nav-link" href="./create">Create</a>
+                                    <a class="nav-link" href="./index">Delete & Read</a>
+                                    <a class="nav-link" href="">Update</a>
                                 </nav>
                             </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -110,30 +111,14 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">CRUD</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Static Navigation</li>
-                        </ol>
+                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> IPTABLES-Create</h1>
+                       
                         <div class="card mb-4">
                             <div class="card-body">
                                 <p class="mb-0">
                                     
-                                    <h2>Create</h2>
-                                    <!---
-                                    <form action="/block_ip" method="post">
-                                        <select id="action" name="action">
-                                            <option value="block">차단</option>
-                                            <option value="allow">허용</option>
-                                        </select>
-
-                                        <label for="ip">차단할 IP주소: </label>
-                                        <input type ="text" id="ip" name = "ip" required>
-
-
-                                        <button type="submit">적용</button>
-                                    </form>
-                                -->
+                                    <h2 style="text-align: center;">Create</h2>
+                                    
                                 <form method="post" action="/create" style="text-align: center;">
                                     <label></label><br>
                                     <div style="margin-bottom: 10px;">
@@ -225,30 +210,11 @@
                                 
                                     
                                 <button type="submit" class="submit-button">
-                                    Apply <img src="../static/icon/submit.png" width="20" height="20">
+                                    Create <img src="../static/icon/submit.png" width="20" height="20">
                                 </button>
                                 </form>
 
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>IP주소</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for ip in blocked_ips %}
-                                            <tr>
-                                                <td>{{ ip }}</td>
-                                                <td>
-                                                    <form action="{{ url_for('unblock_ip', ip=ip)}}" method="post">
-                                                        <button type="submit">삭제</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-
+                            
 
                                 </p>
                             </div>
