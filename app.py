@@ -44,7 +44,7 @@ def create2():
     # rule["out_interface"] = request.form.get("out_interface")
     rule["application"] = request.form.get("application")
     
-    processed_rule = Process_Rule(rule)
+    processed_rule = Process_Delete_Rule(rule)
 
     print("가공된 rule : ", processed_rule)
     
@@ -70,7 +70,7 @@ def index():
 
 @app.route('/delete_rule/<chain_name>', methods=['POST'])
 def delete_rule(chain_name):
-    selected_rules = request.form.getlist('rule_to_delete')
+    selected_rules = request.form.getlist('rule_to_change')
 
     success = False
     for rule_number in selected_rules:
@@ -84,6 +84,58 @@ def delete_rule(chain_name):
             # 오류 처리
 
     return redirect(url_for('index', success=success))
+
+@app.route('/update_rule/<chain_name>', methods=['POST'])
+def update_rule(chain_name):
+    selected_rules = request.form.getlist('rule_to_change')
+    rule_number = selected_rules[0] # 1개만 가능
+    return redirect(url_for('update', rule_number =rule_number, chain_name=chain_name))
+
+
+@app.route('/update', methods=['GET', 'POST'])
+def update():
+    rule_number = request.args.get('rule_number')
+    chain_name = request.args.get("chain_name")
+    print("가지고온 룰 번호", str(rule_number))
+    print("가지고온 체인", str(chain_name))
+    if request.method == 'POST':
+        rule_number = request.form.get('rule_number')
+        chain_name = request.form.get("chain_name")
+        rule = {"traffic_type":"","action":"", "src_ip":"", "dst_ip":"", "protocol":"", "src_port":"", "dst_port":"", "in_interface":"", "out_interface":""}
+        
+        #예외
+        # rule["traffic_type"] = chain_name
+        # rule["priority"] = request.form.get("priority")
+        rule["action"] = request.form.get("action")
+        rule["src_ip"] = request.form.get("src_ip")
+        rule["dst_ip"] = request.form.get("dst_ip")
+        rule["protocol"] = request.form.get("protocol")
+        rule["src_port"] = request.form.get("src_port")
+        rule["dst_port"] = request.form.get("dst_port")
+        # rule["in_interface"] = request.form.get("in_interface")
+        # rule["out_interface"] = request.form.get("out_interface")
+        rule["application"] = request.form.get("application")
+        
+        processed_rule = Process_Update_Rule(rule)
+
+        print("가공된 rule : ", processed_rule)
+        
+
+        command = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule
+
+        print(command)
+        success = False
+        try:
+            subprocess.run(command.split(), check=True)
+            success = True
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+
+        return render_template("update.html", success=success)
+    # 업데이트 로직
+
+    return render_template("update.html", rule_number=rule_number, chain_name=chain_name)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -110,15 +110,16 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> IPTABLES-Create</h1>
+                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> IPTABLES-Update</h1>
                        
                         <div class="card mb-4">
                             <div class="card-body">
                                 <p class="mb-0">
                                     
-                                    <h2 style="text-align: center;">Create</h2>
-                                    
-                                <form method="post" action="/create" style="text-align: center;">
+                                    <h2 style="text-align: center;">Update</h2>
+                                
+                                <form method="post" action="/update" style="text-align: center;">
+                                    <!---
                                     <label></label><br>
                                     <div style="margin-bottom: 10px;">
                                     <input type="radio" id="input_icon" name="traffic_type" value="input" required>
@@ -138,20 +139,30 @@
                                     </div>
                                 </br>
                                 <br>
+                            -->
+                            
+                                
+                                <!-- 나머지 폼 필드 -->
+                                <div style="margin-bottom: 10px;">
+                                    <input  name="rule_number" value="{{ rule_number }}">
+                                    <input name="chain_name" value="{{ chain_name }}">
+                                </div>
 
                                 <div style="margin-bottom: 10px;">
+
                                 <label for="action">동작:</label>
                                 <select id="action" name="action">
                                     <option value="block">차단</option>
                                     <option value="allow">허용</option>
                                 </select>
                                
+                                <!---
                                 <label for="priority">우선순위</label>
                                 <select id="priority" name="priority">
-                                    <option value="normal">보통</option>
                                     <option value="special">우선</option>
+                                    <option value="normal">보통</option>
                                 </select>
-                                
+                            -->
                                 
                                 <label for="protocol">프로토콜:</label>
                                 <select id="protocol" name="protocol">

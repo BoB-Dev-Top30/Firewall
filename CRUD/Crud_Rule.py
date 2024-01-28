@@ -4,7 +4,7 @@ def Process_Priority(rule, processed_rule):
     if(rule["priority"] == "special"):
         processed_rule += " -I"
 
-    else:
+    if(rule["priority"] == "normal"):
         processed_rule += " -A"
     return processed_rule
 
@@ -12,11 +12,12 @@ def Process_Traffic(rule, processed_rule):
     if(rule["traffic_type"]=="input"):
         processed_rule+=" INPUT"
 
-    elif(rule["traffic_type"]=="forward"):
+    if(rule["traffic_type"]=="forward"):
         processed_rule+=" FORWARD"
 
-    else:
+    if(rule["traffic_type"]=="output"):
         processed_rule+=" OUTPUT"
+
     return processed_rule
 
 def Process_Protocol(rule, processed_rule):
@@ -58,7 +59,7 @@ def Process_Action(rule, processed_rule):
         processed_rule += " -j ACCEPT"
     return processed_rule
 
-def Process_Rule(rule):
+def Process_Delete_Rule(rule):
     
     processed_rule=""
 
@@ -73,6 +74,19 @@ def Process_Rule(rule):
     print("모듈에서 생성한 rule: ", processed_rule)
     return processed_rule
 
+# 
+def Process_Update_Rule(rule):
+    processed_rule=""
+    # processed_rule1 = Process_Priority(rule, processed_rule)
+    # processed_rule2 = Process_Traffic(rule, processed_rule)
+    processed_rule3 = Process_Protocol(rule, processed_rule)
+    processed_rule4 = Process_Ip(rule, processed_rule)
+    processed_rule5 = Process_Port(rule, processed_rule)
+    processed_rule6 = Process_Action(rule, processed_rule)
+
+    processed_rule = processed_rule3 + processed_rule4 +processed_rule5 + processed_rule6
+    print("모듈에서 생성한 rule: ", processed_rule)
+    return processed_rule
     
     
 
