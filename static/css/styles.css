@@ -11255,6 +11255,9 @@ body {
   background-position: 10px center; /* 아이콘 위치 */
   transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
 }
+.submit-button:hover {
+  background-color: #45a049; /* 마우스 오버시 배경색 변경 */
+}
 
 .delete-button {
   width: 100px; /* 버튼 너비 */
@@ -11275,9 +11278,26 @@ body {
   background-color: red; /* 마우스 오버시 배경색 변경 */
 }
 
-.submit-button:hover {
-  background-color: #45a049; /* 마우스 오버시 배경색 변경 */
+.update-button {
+  width: 100px; /* 버튼 너비 */
+  height: 50px; /* 버튼 높이 */
+  font-size: 15px; /* 글자 크기 */
+  background-color: whitesmoke; /* 배경색 */
+  color: black; /* 글자색 */
+  padding: 12px 20px; /* 패딩 */
+  border-radius: 4px; /* 둥근 모서리 */
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  display: flex; /* Flexbox 사용 */
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  background-position: 10px center; /* 아이콘 위치 */
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
 }
+
+.update-button:hover {
+  background-color: blue; /* 마우스 오버시 배경색 변경 */
+}
+
+
 
 /* iptables-table 테이블 스타일 */
 #iptables-table {
