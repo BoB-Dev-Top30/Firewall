@@ -5,6 +5,7 @@ import subprocess
 from CRUD.Crud_Rule import *
 from CRUD.Parse_Table import *
 
+from MONITOR.Parse_Monitor import *
 
 app = Flask(__name__)
 
@@ -136,8 +137,35 @@ def update():
     # 업데이트 로직
 
     # 겟일때 렌더링
-    return render_template("update.html", rule_number=rule_number, chain_name=chain_name)
+    return render_template("update.html", rule_number=rule_number, chain_name=chain_name) 
 
+
+
+@app.route('/network_state', methods=['GET', 'POST'])
+def network_state():
+    try:
+        # allow 한 상태정보만 가지고 오기
+        command = "sudo conntrack -L | grep -E 'ESTABLISHED|RELATED' | grep -v '127.0.0.1'"
+        state_info = subprocess.run(command, shell=True, check=True, text=True, stdout=subprocess.PIPE)
+        state_info = conntrack_parser(state_info.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+        
+    '''
+    if(methods=='POST'):
+        # 검색기능해서 -> 명령어로 만들기 (grep해오는거)
+        try:
+            filtered_state_info = subprocess.run(["sudo", "conntrack", "-L", "|", "grep", "-E",  "'ESTABLISHED|RELATED'", "|", "grep", "-v",  "'127.0.0.1'"], check=True)
+            filtered_state_info = conntrack_parser(filtered_state_info)
+            success=True
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            success=False
+
+        return render_template('network_state.html', state_info=filtered_state_info, success=success)
+    '''
+    print(state_info)
+    return render_template('network_state.html', state_info=state_info)
 
 if __name__ == "__main__":
     app.run(debug=True)
