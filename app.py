@@ -55,7 +55,7 @@ def create2():
     
 
     command = "sudo " + "iptables" + processed_rule
-    command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
+    command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + "network_log" + "_" + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
     
     success = False
     try:
@@ -131,7 +131,7 @@ def update():
         
 
         command = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule 
-        command2 = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule2 + " --log-prefix " + str(chain_name)+"_"+str(rule["action"])+": "
+        command2 = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule2 + " --log-prefix " + "network_log" + "_" +str(chain_name)+"_"+str(rule["action"])+": "
         print(command)
         success = False
         try:
@@ -177,6 +177,40 @@ def network_state():
         return render_template('network_state.html', state_info=filtered_state_info, success=success)
     
     return render_template('network_state.html', state_info=state_info)
+
+
+# 로그 테이블 정보
+@app.route('/log_more', methods=['GET', 'POST'])
+def log_more():
+    try:
+        # 로그 전체정보 가지고오기
+        command = 'grep network_log /var/log/syslog'
+        log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
+        
+        processed_log = log_parser(log_info.stdout)
+        print(processed_log)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+    '''
+    if(request.method=='POST'):
+        # 검색기능
+        try:
+            user_input = request.form.get("user_input")
+
+            filtered_state_info = state_search(state_info, user_input)
+            success=True
+            if len(filtered_state_info)==0:
+                print("결과 없음")
+                success = "No Answer"
+        
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            success=False
+
+        return render_template('network_state.html', state_info=filtered_state_info, success=success)
+        '''
+    
+    return render_template('log_more.html', log_info=processed_log)
 
 if __name__ == "__main__":
     app.run(debug=True)
