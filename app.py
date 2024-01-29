@@ -59,8 +59,8 @@ def create2():
     
     success = False
     try:
-        subprocess.run(command.split(), check=True)
         subprocess.run(command2.split(), check=True)
+        subprocess.run(command.split(), check=True)
         success = True
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
@@ -135,8 +135,8 @@ def update():
         print(command)
         success = False
         try:
-            subprocess.run(command.split(), check=True)
             subprocess.run(command2.split(), check=True)
+            subprocess.run(command.split(), check=True)
             success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
