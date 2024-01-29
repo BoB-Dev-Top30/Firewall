@@ -191,15 +191,15 @@ def log_more():
         print(processed_log)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
-    '''
+
     if(request.method=='POST'):
         # 검색기능
         try:
             user_input = request.form.get("user_input")
 
-            filtered_state_info = state_search(state_info, user_input)
+            filtered_log_info = log_search(processed_log, user_input)
             success=True
-            if len(filtered_state_info)==0:
+            if len(filtered_log_info)==0:
                 print("결과 없음")
                 success = "No Answer"
         
@@ -207,8 +207,8 @@ def log_more():
             print(f"An error occurred: {e}")
             success=False
 
-        return render_template('network_state.html', state_info=filtered_state_info, success=success)
-        '''
+        return render_template('log_more.html', log_info=filtered_log_info, success=success)
+        
     
     return render_template('log_more.html', log_info=processed_log)
 

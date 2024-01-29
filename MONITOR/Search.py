@@ -44,5 +44,27 @@ def state_search(state_info, user_input):
             searched_state_info.append(state)
             continue
     return searched_state_info
+
+def log_search(log_info, user_input):
+    searched_log_info = []
+    
+    for log in log_info:
+        if str(user_input) in str(log['date_time']):
+            searched_log_info.append(log)
+            continue
+        elif str(user_input) in log['chain']:
+            searched_log_info.append(log)
+        elif str(user_input) in log['activity']:
+            searched_log_info.append(log)
+        elif str(user_input) in log['src_ip']:
+            searched_log_info.append(log)
+        elif str(user_input) in log['dst_ip']:
+            searched_log_info.append(log)
+        elif str(user_input) in log['packet_length']:
+            searched_log_info.append(log)   
+        elif str(user_input) in log['protocol']:
+            searched_log_info.append(log)
+
+    return searched_log_info
         
 
