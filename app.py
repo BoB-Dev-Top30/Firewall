@@ -48,16 +48,19 @@ def create2():
     # rule["out_interface"] = request.form.get("out_interface")
     rule["application"] = request.form.get("application")
     
-    processed_rule = Process_Delete_Rule(rule)
+    processed_rule = Process_Create_Rule(rule)
+    processed_rule2 = Process_Create_Rule(rule, log=1)
 
     print("가공된 rule : ", processed_rule)
     
 
     command = "sudo " + "iptables" + processed_rule
-
+    command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
+    
     success = False
     try:
         subprocess.run(command.split(), check=True)
+        subprocess.run(command2.split(), check=True)
         success = True
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
@@ -122,16 +125,18 @@ def update():
         rule["application"] = request.form.get("application")
         
         processed_rule = Process_Update_Rule(rule)
+        processed_rule2 = Process_Update_Rule(rule,log=1)
 
         print("가공된 rule : ", processed_rule)
         
 
-        command = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule
-
+        command = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule 
+        command2 = "sudo " + "iptables " + "-R " + str(chain_name) + " " + str(rule_number) + " " + processed_rule2 + " --log-prefix " + str(chain_name)+"_"+str(rule["action"])+": "
         print(command)
         success = False
         try:
             subprocess.run(command.split(), check=True)
+            subprocess.run(command2.split(), check=True)
             success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
