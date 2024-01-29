@@ -6,8 +6,11 @@ from CRUD.Crud_Rule import *
 from CRUD.Parse_Table import *
 
 from MONITOR.Parse_Monitor import *
+from MONITOR.Search import *
 
 app = Flask(__name__)
+
+import json
 
 
 @app.route("/")
@@ -151,20 +154,23 @@ def network_state():
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
         
-    '''
-    if(methods=='POST'):
-        # 검색기능해서 -> 명령어로 만들기 (grep해오는거)
+    if(request.method=='POST'):
+        # 검색기능
         try:
-            filtered_state_info = subprocess.run(["sudo", "conntrack", "-L", "|", "grep", "-E",  "'ESTABLISHED|RELATED'", "|", "grep", "-v",  "'127.0.0.1'"], check=True)
-            filtered_state_info = conntrack_parser(filtered_state_info)
+            user_input = request.form.get("user_input")
+            print("state:",state_info)
+            filtered_state_info = state_search(state_info, user_input)
             success=True
+            if len(filtered_state_info)==0:
+                print("결과 없음")
+                success = "No Answer"
+        
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             success=False
 
         return render_template('network_state.html', state_info=filtered_state_info, success=success)
-    '''
-    print(state_info)
+    
     return render_template('network_state.html', state_info=state_info)
 
 if __name__ == "__main__":
