@@ -1,5 +1,22 @@
+from datetime import datetime
 from collections import Counter
 
+def get_time_data(processed_log):
+
+    # 각 로그 항목에서 월을 추출
+    month_list = [datetime.strptime(log['date_time'], '%b %d %H:%M:%S').strftime('%B') for log in processed_log]
+
+    # Counter 객체를 이용해 각 월의 로그 개수를 계산
+    month_counter = Counter(month_list)
+
+    # 월과 로그 개수를 각각의 리스트로 분리
+    months = list(month_counter.keys())
+    counts = list(month_counter.values())
+
+    # 결과를 반환
+    return months, counts
+
+    return 
 def get_action_data(processed_log):
     allow=0
     deny=0

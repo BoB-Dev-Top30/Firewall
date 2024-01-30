@@ -223,6 +223,9 @@ def api_log():
         
         processed_log = log_parser(log_info.stdout)
 
+        # 날짜별 데이터
+        time_list, time_count_list = get_time_data(processed_log)
+
         # 허용.차단 데이터
         allow, deny = get_action_data(processed_log)
 
@@ -233,13 +236,17 @@ def api_log():
         Tcp, Udp, Icmp = get_protocol_data(processed_log)
 
         # ip 데이터
-        ip_list, count_list = get_ip_data(processed_log)
+        ip_list, ip_count_list = get_ip_data(processed_log)
         print(ip_list)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
     print(Input)
     data = {
+    "time": {
+        "labels": time_list,
+        "values": time_count_list
+    },
 
     "action": {
         "labels": ["Allow", "Deny"],
@@ -258,7 +265,7 @@ def api_log():
     
     "ip": {
         "labels": ip_list,
-        "values": count_list
+        "values": ip_count_list
     },
 
     }
