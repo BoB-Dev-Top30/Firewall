@@ -42,7 +42,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <div class="sb-sidenav-menu-heading">Core</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 CRUD
@@ -65,14 +65,10 @@
                                     <a class="nav-link" href="./log">Ip-Tables Dashboard</a>
                                 </nav>
                             </div>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="charts.html">
+                            <div class="sb-sidenav-menu-heading">Detail_Management</div>
+                            <a class="nav-link" href="./packet_sumulate">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
+                                Packet-Simulation
                             </a>
                         </div>
                     </div>
@@ -130,10 +126,11 @@
                                 
                                 <label for="protocol">프로토콜:</label>
                                 <select id="protocol" name="protocol">
+                                        <option value="">ALL</option>
                                         <option value="tcp">TCP</option>
                                         <option value="udp">UDP</option>
                                         <option value="icmp">ICMP</option>
-                                        <option value="">ALL</option>
+
                                     </select>
                                 
                                 
@@ -149,11 +146,11 @@
                                 <br>    
                                 <div style="margin-bottom: 10px;">
                                 <label for="src_ip">출발지 IP 주소:</label>
-                                <input type="text" id="src_ip" name="src_ip" placeholder="예: 192.168.1.1" style="color: grey;">
+                                <input type="text" id="src_ip" name="src_ip" placeholder="예: 192.168.1.1(CIDR지원)" style="color: grey;">
 
                                 
                                 <label for="dst_ip">목적지 IP 주소:</label>
-                                <input type="text" id="dst_ip" name="dst_ip" placeholder="예: 192.168.1.1" style="color: grey;">
+                                <input type="text" id="dst_ip" name="dst_ip" placeholder="예: 192.168.1.1(CIDR지원)" style="color: grey;">
                                 </div>
 
                                 <br>
@@ -261,8 +258,8 @@
             };
             
             function isValidIpAddress(ip) {
-                var ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-                return ipRegex.test(ip);
+                var ipCidrRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([0-9]|[1-2][0-9]|3[0-2]))?$/;
+                return ipCidrRegex.test(ip);
             }
             
             function isValidPort(port) {

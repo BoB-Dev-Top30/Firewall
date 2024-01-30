@@ -10,6 +10,7 @@ from MONITOR.Search import *
 from MONITOR.Process_Log import *
 
 from DETAIL.Parse_Detail import *
+from DETAIL.Match_Algo import *
 
 app = Flask(__name__)
 
@@ -75,6 +76,7 @@ def index():
     success = request.args.get('success', False)
     iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
     chains = parse_iptables(iptables_output)
+    print("chain입니다.", chains)
     return render_template('index.html', chains=chains, success=success)
 
 
@@ -244,7 +246,9 @@ def api_log():
         command = 'grep network_log /var/log/syslog'
         log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
         
+        print(log_info)
         processed_log = log_parser(log_info.stdout)
+        print(processed_log)
 
         # 날짜별 데이터
         time_list, time_count_list = get_time_data(processed_log)
@@ -264,7 +268,6 @@ def api_log():
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
-    print(Input)
     data = {
     "time": {
         "labels": time_list,
@@ -299,7 +302,48 @@ def log():
 
     return render_template('log.html')
 
+# Ajax로 막대그래프 (매치된거와 안매치된거)
+@app.route('/packet_simulate', methods=["GET","POST"])
+def packet_simulate():
 
+    if(request.method == "POST"):
+        print(request.data)
+        data = request.json  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+        print(data)
+        src_ip = str(data.get('src_ip'))
+        dst_ip = str(data.get('dst_ip'))
+        src_port = str(data.get('src_port'))
+        dst_port = str(data.get('dst_port'))
+        protocol = str(data.get('protocol'))
+
+        print(data)
+        packet = {"src_ip":"", "dst_ip":"", "src_port":"", "dst_port":"", "protocol":""}
+        packet["src_ip"] = src_ip
+        packet["dst_ip"] =  dst_ip
+        packet["src_port"] =  src_port
+        packet["dst_port"] =  dst_port
+        packet["protocol"] =  protocol
+
+        print("생성된 패킷", packet)
+
+        iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
+        
+        chains = parse_iptables(iptables_output)
+
+        
+        matched_chain, unmatched_chain, matched_chain_num, unmatched_chain_num = Match_Rule(packet, chains)
+
+        print("matched", matched_chain)
+
+        
+        data = {
+            "labels" : ["Matched", "Un-Matched"],
+            "values" : [matched_chain_num, unmatched_chain_num]
+            }
+
+        return jsonify(data)
+    return render_template("packet_simulate.html")
+    
 if __name__ == "__main__":
     app.run(debug=True)
 

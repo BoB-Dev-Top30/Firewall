@@ -21,6 +21,8 @@ def Process_Traffic(rule, processed_rule):
     return processed_rule
 
 def Process_Protocol(rule, processed_rule):
+    print("함수에서 전달받은것", rule["protocol"])
+    
     if(rule["protocol"]!=""):
         processed_rule=" -p "+rule["protocol"]
     return processed_rule
