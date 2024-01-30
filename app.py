@@ -9,6 +9,8 @@ from MONITOR.Parse_Monitor import *
 from MONITOR.Search import *
 from MONITOR.Process_Log import *
 
+from DETAIL.Parse_Detail import *
+
 app = Flask(__name__)
 
 import json
@@ -84,7 +86,7 @@ def delete_rule(chain_name):
     for rule_number in selected_rules:
         try:
             subprocess.run(['sudo', 'iptables', '-D', chain_name, rule_number], check=True)
-            success = True
+            success = "delete"
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             # success = False
@@ -98,6 +100,27 @@ def update_rule(chain_name):
     selected_rules = request.form.getlist('rule_to_change')
     rule_number = selected_rules[0] # 1개만 가능
     return redirect(url_for('update', rule_number =rule_number, chain_name=chain_name))
+
+# 체인이름 전달
+@app.route('/unused_rule/<chain_name>', methods=['POST'])
+def unused_rule(chain_name):
+    
+    success=False
+    print(chain_name)
+    try:
+        chain_name = chain_name.upper()
+        iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
+        chains = parse_iptables(iptables_output)
+        print(chains)
+        
+        unused_policy = parse_unused(chains, chain_name)
+        success="unused"
+        if(len(unused_policy[chain_name])==0):
+            success="no-unused"
+    except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+
+    return render_template('index.html', chains=unused_policy, success=success)
 
 
 @app.route('/update', methods=['GET', 'POST'])
@@ -275,17 +298,7 @@ def api_log():
 def log():
 
     return render_template('log.html')
-    '''
-    try:
-        # 로그 전체정보 가지고오기
-        command = 'grep network_log /var/log/syslog'
-        log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
-        
-        processed_log = log_parser(log_info.stdout)
-        print(processed_log)
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
-    '''
+
 
 if __name__ == "__main__":
     app.run(debug=True)

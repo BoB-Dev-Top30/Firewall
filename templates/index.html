@@ -126,6 +126,9 @@
                                         {% endfor %}
                                     </table>
                                     <div style="display: flex; justify-content: flex-end;">
+                                        <button type="button" onclick="updateAction('unused', 'rule-form-{{ chain_name }}')" class="unused-button">
+                                            Only-Unused <img src="../static/icon/submit.png" width="30" height="30">
+                                        </button>
                                         <button type="button" onclick="updateAction('delete', 'rule-form-{{ chain_name }}')" class="delete-button">
                                             Delete <img src="../static/icon/submit.png" width="30" height="30"> 
                                         </button>
@@ -162,8 +165,14 @@
         
         <script>
             window.onload = function() {
-                {% if success %}
+                {% if success=="delete" %}
                     alert("규칙이 성공적으로 삭제되었습니다.");
+                {% endif %}
+                {% if success=="unused" %}
+                    alert("미사용 정책을 추출하였습니다.");
+                {% endif %}
+                {% if success=="no-unused" %}
+                    alert("미사용 정책이 없습니다.");
                 {% endif %}
             };
         </script>
@@ -176,7 +185,7 @@
             var checkboxes = form.querySelectorAll('input[type="checkbox"]');
             var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
 
-            if (checkedCount === 0) {
+            if ((actionType === 'update' && checkedCount === 0)|| (actionType === 'delete' && checkedCount === 0)) {
                 alert("체크박스를 선택해주세요.");
                 return;
             }
@@ -190,6 +199,8 @@
                 form.action = "{{ url_for('delete_rule', chain_name='') }}" + chainName;
             } else if (actionType === 'update') {
                 form.action = "{{ url_for('update_rule', chain_name='') }}" + chainName;
+            } else if (actionType === 'unused') {
+                form.action = "{{ url_for('unused_rule', chain_name='') }}" + chainName;
             }
         form.submit();
     }
