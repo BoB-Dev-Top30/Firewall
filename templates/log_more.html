@@ -86,55 +86,40 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> IPTABLES - Rules </h1>
+                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> Ip-Table Log_Info </h1>
                         <div class="card mb-4">
+                            
                             <div class="card-body">
+                                
                                 <p class="mb-0">
-                                    {% for chain_name, rules in chains.items() %}
-                                    <h2 style="text-align: center;">{{ chain_name }} Chain</h2>
-                                    <form method="post" id="rule-form-{{ chain_name }}" data-chain-name="{{ chain_name }}" action="#">
+                                    <form action="./log_more" method="post">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" name="user_input" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                                            <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
                                     <table id="iptables-table">
                                         <tr>
-                                            <th>Select</th>
-                                            <th>Number</th>
-                                            <th>Packets</th>
-                                            <th>Bytes</th>
-                                            <th>Target</th>
+                                            <th>Date and Time</th>
+                                            <th>Chain</th>
+                                            <th>Activity</th>
+                                            <th>Source IP</th>
+                                            <th>Destination IP</th>
+                                            <th>Packet Length</th>
                                             <th>Protocol</th>
-                                            <th>Opt</th>
-                                            <th>In</th>
-                                            <th>Out</th>
-                                            <th>Source</th>
-                                            <th>Destination</th>
-                                            <th>Details</th>
                                         </tr>
-                                        {% for rule in rules %}
+                                        {% for log in log_info %}
                                         <tr>
-                                            <td><input type="checkbox" name="rule_to_change" value="{{ rule.num }}"></td>
-                                            <td>{{ rule.num }}</td>
-                                            <td>{{ rule.packets }}</td>
-                                            <td>{{ rule.bytes }}</td>
-                                            <td>{{ rule.target }}</td>
-                                            <td>{{ rule.protocol }}</td>
-                                            <td>{{ rule.opt }}</td>
-                                            <td>{{ rule.in }}</td>
-                                            <td>{{ rule.out }}</td>
-                                            <td>{{ rule.source }}</td>
-                                            <td>{{ rule.destination }}</td>
-                                            <td>{{ rule.details }}</td>
+                                            <td>{{ log.date_time }}</td>
+                                            <td>{{ log.chain }}</td>
+                                            <td>{{ log.activity }}</td>
+                                            <td>{{ log.src_ip }}</td>
+                                            <td>{{ log.dst_ip }}</td>
+                                            <td>{{ log.packet_length }}</td>
+                                            <td>{{ log.protocol }}</td>
                                         </tr>
                                         {% endfor %}
                                     </table>
-                                    <div style="display: flex; justify-content: flex-end;">
-                                        <button type="button" onclick="updateAction('delete', 'rule-form-{{ chain_name }}')" class="delete-button">
-                                            Delete <img src="../static/icon/submit.png" width="30" height="30"> 
-                                        </button>
-                                        <button type="button" onclick="updateAction('update', 'rule-form-{{ chain_name }}')" class="update-button">
-                                            Update <img src="../static/icon/submit.png" width="30" height="30">
-                                        </button>                                        
-                                    </div>
-                                </form>
-                                    {% endfor %}
                                     
                                 </p>
                             </div>
@@ -163,36 +148,12 @@
         <script>
             window.onload = function() {
                 {% if success %}
-                    alert("규칙이 성공적으로 삭제되었습니다.");
+                    alert("검색이 성공적으로 수행되었습니다.");
+                {% endif %}
+                {% if success=="No Answer" %}
+                    alert("검색결과가 없습니다.");
                 {% endif %}
             };
         </script>
-
-    <script>
-        function updateAction(actionType, formId) {
-            var form = document.getElementById(formId);
-            var chainName = form.getAttribute('data-chain-name');
-
-            var checkboxes = form.querySelectorAll('input[type="checkbox"]');
-            var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-
-            if (checkedCount === 0) {
-                alert("체크박스를 선택해주세요.");
-                return;
-            }
-
-            if (actionType === 'update' && checkedCount > 1) {
-                alert("1번에 1개씩만 업데이트 해주세요.");
-                return;
-            }
-
-            if (actionType === 'delete') {
-                form.action = "{{ url_for('delete_rule', chain_name='') }}" + chainName;
-            } else if (actionType === 'update') {
-                form.action = "{{ url_for('update_rule', chain_name='') }}" + chainName;
-            }
-        form.submit();
-    }
-    </script>
     </body>
 </html>
