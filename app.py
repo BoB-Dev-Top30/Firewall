@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 import subprocess
 
 # 자체 제작 모듈
@@ -7,6 +7,7 @@ from CRUD.Parse_Table import *
 
 from MONITOR.Parse_Monitor import *
 from MONITOR.Search import *
+from MONITOR.Process_Log import *
 
 app = Flask(__name__)
 
@@ -211,6 +212,73 @@ def log_more():
         
     
     return render_template('log_more.html', log_info=processed_log)
+
+# 로그 테이블 찍는 api
+@app.route('/api/log')
+def api_log():
+    try:
+        # 로그 전체정보 가지고오기
+        command = 'grep network_log /var/log/syslog'
+        log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
+        
+        processed_log = log_parser(log_info.stdout)
+
+        # 허용.차단 데이터
+        allow, deny = get_action_data(processed_log)
+
+        # chaining 데이터
+        Input, Forward, Output = get_chaining_data(processed_log)
+
+        # protocol 데이터
+        Tcp, Udp, Icmp = get_protocol_data(processed_log)
+
+        # ip 데이터
+        ip_list, count_list = get_ip_data(processed_log)
+        print(ip_list)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+
+    print(Input)
+    data = {
+
+    "action": {
+        "labels": ["Allow", "Deny"],
+        "values": [allow, deny]
+    },
+    
+    "chaining": {
+        "labels": ["Input", "Forward", "Output"],
+        "values": [Input, Forward, Output]
+    },
+    
+    "protocol": {
+        "labels": ["Tcp", "Udp", "Icmp"],
+        "values": [Tcp, Udp, Icmp]
+    },
+    
+    "ip": {
+        "labels": ip_list,
+        "values": count_list
+    },
+
+    }
+    return jsonify(data)
+
+@app.route('/log', methods=['GET'])
+def log():
+
+    return render_template('log.html')
+    '''
+    try:
+        # 로그 전체정보 가지고오기
+        command = 'grep network_log /var/log/syslog'
+        log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
+        
+        processed_log = log_parser(log_info.stdout)
+        print(processed_log)
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+    '''
 
 if __name__ == "__main__":
     app.run(debug=True)
