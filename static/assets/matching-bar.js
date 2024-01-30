@@ -29,6 +29,25 @@ $(document).ready(function() {
                 success: function(data) {
                     // AJAX 요청 성공 시 그래프 그리기
                     drawGraph(data);
+
+                    // 버튼 생성
+                    var $btnContainer = $('<div/>');
+                    $('<button/>', {
+                        text: 'Matched Info',
+                        id: 'matchedInfoBtn'
+                    }).click(function() {
+                        window.location.href = './matched';
+                    }).appendTo($btnContainer);
+                    $('<button/>', {
+                        text: 'Un-Matched Info',
+                        id: 'unmatchedInfoBtn',
+                        href: './unmatched'
+                    }).click(function() {
+                        window.location.href = './unmatched';
+                    }).appendTo($btnContainer);
+
+                    // 생성한 버튼을 원하는 위치에 추가
+                    $('#MatchLinkButton').append($btnContainer);
                 },
                 error: function(xhr, status, error) {
                     // 에러 처리

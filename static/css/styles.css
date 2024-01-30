@@ -11316,6 +11316,53 @@ body {
   background-color: yellow; /* 마우스 오버시 배경색 변경 */
 }
 
+#matchedInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  background-color: whitesmoke; /* 배경색 */
+  
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#matchedInfoBtn:hover {
+  background-color: green; /* 마우스 오버시 배경색 변경 */
+}
+
+#unmatchedInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  
+  background-color: whitesmoke; /* 배경색 */
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#unmatchedInfoBtn:hover {
+  background-color: red; /* 마우스 오버시 배경색 변경 */
+}#MatchLinkButton .btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+#MatchLinkButton .btn-container button {
+  margin: 0; /* 마진 제거 */
+}
+
+#MatchLinkButton #matchedInfoBtn,
+#MatchLinkButton #unmatchedInfoBtn {
+  margin: 0 !important; /* 마진 강제 제거 */
+}
 
 
 /* iptables-table 테이블 스타일 */

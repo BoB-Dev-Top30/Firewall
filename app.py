@@ -182,6 +182,8 @@ def network_state():
         command = "sudo conntrack -L | grep -E 'ESTABLISHED|RELATED' | grep -v '127.0.0.1'"
         state_info = subprocess.run(command, shell=True, check=True, text=True, stdout=subprocess.PIPE)
         state_info = conntrack_parser(state_info.stdout)
+
+        print(state_info)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
         
@@ -329,7 +331,6 @@ def packet_simulate():
         iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
         
         chains = parse_iptables(iptables_output)
-
         
         matched_chain, unmatched_chain, matched_chain_num, unmatched_chain_num = Match_Rule(packet, chains)
 
