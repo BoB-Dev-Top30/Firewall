@@ -33,37 +33,33 @@ def rule_matches_protocol(user_protocol, iptables_protocol):
     return False
 
 def Match_Rule(packet, iptables_chains):
+    matched_chain = {"INPUT": [], "FORWARD": [], "OUTPUT": []}
+    unmatched_chain = {"INPUT": [], "FORWARD": [], "OUTPUT": []}
 
+    # 체인 순서를 INPUT, FORWARD, OUTPUT으로 설정
+    chain_order = ['INPUT', 'FORWARD', 'OUTPUT']
 
-    matched_chain={"INPUT":[], "FORWARD":[], "OUTPUT":[]}
-    matched_list = []
-    unmatched_list = []
+    for chain in chain_order:
+        rules = iptables_chains.get(chain, [])
+        matched_list = []
+        unmatched_list = []
 
-    for chain, rules in iptables_chains.items():
         for rule in rules:
-            print(rule)
-            if rule_matches_ip(packet["src_ip"], rule['src_ip']):
-                if rule_matches_ip(packet["dst_ip"], rule['dst_ip']):
-                    if rule_matches_port(packet["src_port"], rule['src_port']):
-                        if rule_matches_port(packet["dst_port"], rule['dst_port']):
-                            if rule_matches_protocol(packet["protocol"], rule['protocol']):
-                                matched_list.append(rule)
-                            else:
-                                unmatched_list.append(rule)
-                        else:
-                            unmatched_list.append(rule)
-                    else:
-                        unmatched_list.append(rule)
-                else:
-                    unmatched_list.append(rule)
+            if (rule_matches_ip(packet["src_ip"], rule['src_ip']) and
+                rule_matches_ip(packet["dst_ip"], rule['dst_ip']) and
+                rule_matches_port(packet["src_port"], rule['src_port']) and
+                rule_matches_port(packet["dst_port"], rule['dst_port']) and
+                rule_matches_protocol(packet["protocol"], rule['protocol'])):
+                matched_list.append(rule)
             else:
                 unmatched_list.append(rule)
-    print("매치된 리스트", matched_list)
-    matched_chain[chain] = matched_list
-    matched_chain_num = len(matched_chain["INPUT"]) + len(matched_chain["FORWARD"]) + len(matched_chain["OUTPUT"]) 
-        
-    unmatched_chain = matched_chain.copy()
-    unmatched_chain[chain] = unmatched_list        
-    unmatched_chain_num = len(unmatched_chain["INPUT"]) + len(unmatched_chain["FORWARD"]) + len(unmatched_chain["OUTPUT"]) 
 
+        matched_chain[chain] = matched_list
+        unmatched_chain[chain] = unmatched_list
+
+    matched_chain_num = sum(len(matched_chain[chain]) for chain in chain_order)
+    unmatched_chain_num = sum(len(unmatched_chain[chain]) for chain in chain_order)
+
+    print("함수에서 매치된거", matched_chain)
+    print("함수에서 매치되지 않은거", unmatched_chain)
     return matched_chain, unmatched_chain, matched_chain_num, unmatched_chain_num

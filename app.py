@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session, Response
 import subprocess
 
 # 자체 제작 모듈
@@ -12,9 +12,12 @@ from MONITOR.Process_Log import *
 from DETAIL.Parse_Detail import *
 from DETAIL.Match_Algo import *
 
-app = Flask(__name__)
-
 import json
+import os
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
+
 
 
 @app.route("/")
@@ -339,12 +342,43 @@ def packet_simulate():
         
         data = {
             "labels" : ["Matched", "Un-Matched"],
-            "values" : [matched_chain_num, unmatched_chain_num]
+            "values" : [matched_chain_num, unmatched_chain_num],
+            "original_values" : [matched_chain, unmatched_chain]
             }
 
-        return jsonify(data)
+        json_data = json.dumps(data, sort_keys=False)
+        return Response(json_data, mimetype='application/json')
     return render_template("packet_simulate.html")
-    
+
+@app.route('/matched', methods=['POST'])
+def matched():
+    data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+    chains = data['original_values']
+    print("/matched에서의 chains", chains)
+    session['chains'] = chains
+
+    response_data = {'redirect': url_for('index')}
+    json_data = json.dumps(response_data, sort_keys=False)
+    return Response(json_data, mimetype='application/json')
+
+@app.route('/unmatched', methods=['POST'])
+def unmatched():
+    data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+    chains = data['original_values']
+    print("/unmatched에서의 chains", chains)
+    session['chains'] = chains
+
+    response_data = {'redirect': url_for('match_table')}
+    json_data = json.dumps(response_data, sort_keys=False)
+    return Response(json_data, mimetype='application/json')
+
+@app.route('/match_table', methods=['GET'])
+def match_table():
+    data = request.get_json()
+    chains = data['chains']
+    print("chain입니다.", chains)
+    return render_template('match_table.html', chains=chains, success="detail")
+
 if __name__ == "__main__":
     app.run(debug=True)
 

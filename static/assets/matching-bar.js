@@ -36,14 +36,43 @@ $(document).ready(function() {
                         text: 'Matched Info',
                         id: 'matchedInfoBtn'
                     }).click(function() {
-                        window.location.href = './matched';
+                        $.ajax({
+                            url: './matched',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            data: JSON.stringify({ original_values: data.original_values[0] }),
+                            success: function(response) {
+                                console.log(response);
+                                console.log(data);
+                                window.location.href = response.redirect;
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(data)
+                                console.error(textStatus, errorThrown);
+                            }
+                        });
                     }).appendTo($btnContainer);
+
                     $('<button/>', {
                         text: 'Un-Matched Info',
-                        id: 'unmatchedInfoBtn',
-                        href: './unmatched'
+                        id: 'unmatchedInfoBtn'
                     }).click(function() {
-                        window.location.href = './unmatched';
+                        $.ajax({
+                            url: './unmatched',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            data: JSON.stringify({ original_values: data.original_values[1] }),
+                            success: function(response) {
+                                console.log(response);
+                                console.log("Data to be sent:", JSON.stringify({ original_values: data.original_values[1] }));
+                                window.location.href = response.redirect;
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.error(textStatus, errorThrown);
+                            }
+                        });
                     }).appendTo($btnContainer);
 
                     // 생성한 버튼을 원하는 위치에 추가
