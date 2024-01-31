@@ -11261,11 +11261,11 @@ body {
 
 .delete-button {
   width: 100px; /* 버튼 너비 */
-  height: 50px; /* 버튼 높이 */
+  height: 40px; /* 버튼 높이 */
   font-size: 15px; /* 글자 크기 */
   background-color: whitesmoke; /* 배경색 */
   color: black; /* 글자색 */
-  padding: 12px 20px; /* 패딩 */
+  padding: 8px 15px; /* 패딩 */
   border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer; /* 마우스 오버시 커서 변경 */
   display: flex; /* Flexbox 사용 */
@@ -11280,11 +11280,11 @@ body {
 
 .update-button {
   width: 100px; /* 버튼 너비 */
-  height: 50px; /* 버튼 높이 */
+  height: 40px; /* 버튼 높이 */
   font-size: 15px; /* 글자 크기 */
   background-color: whitesmoke; /* 배경색 */
   color: black; /* 글자색 */
-  padding: 12px 20px; /* 패딩 */
+  padding: 8px 15px; /* 패딩 */
   border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer; /* 마우스 오버시 커서 변경 */
   display: flex; /* Flexbox 사용 */
@@ -11297,6 +11297,72 @@ body {
   background-color: blue; /* 마우스 오버시 배경색 변경 */
 }
 
+.unused-button {
+  width: 100px; /* 버튼 너비 */
+  height:40px; /* 버튼 높이 */
+  font-size: 15px; /* 글자 크기 */
+  background-color: whitesmoke; /* 배경색 */
+  color: black; /* 글자색 */
+  padding: 8px 15px; /* 패딩 */
+  border-radius: 4px; /* 둥근 모서리 */
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  display: flex; /* Flexbox 사용 */
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  background-position: 10px center; /* 아이콘 위치 */
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+.unused-button:hover {
+  background-color: yellow; /* 마우스 오버시 배경색 변경 */
+}
+
+#matchedInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  background-color: whitesmoke; /* 배경색 */
+  
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#matchedInfoBtn:hover {
+  background-color: green; /* 마우스 오버시 배경색 변경 */
+}
+
+#unmatchedInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  
+  background-color: whitesmoke; /* 배경색 */
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#unmatchedInfoBtn:hover {
+  background-color: red; /* 마우스 오버시 배경색 변경 */
+}#MatchLinkButton .btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+#MatchLinkButton .btn-container button {
+  margin: 0; /* 마진 제거 */
+}
+
+#MatchLinkButton #matchedInfoBtn,
+#MatchLinkButton #unmatchedInfoBtn {
+  margin: 0 !important; /* 마진 강제 제거 */
+}
 
 
 /* iptables-table 테이블 스타일 */
@@ -11331,4 +11397,26 @@ body {
 /* iptables-table 마우스 오버 시 행 스타일 */
 #iptables-table tr:hover {
   background-color: #e9ecef;
+}
+
+.input-table {
+  border-collapse: collapse;
+  margin: 0 auto; /* 테이블을 중앙에 배치 */
+}
+.input-table td {
+  padding: 8px; /* 셀 패딩 조정 */
+  text-align: center; /* 텍스트 왼쪽 정렬 */
+}
+.input-table input[type="text"],
+.input-table select {
+  width: 100%; /* 입력 필드 전체 너비 사용 */
+  box-sizing: border-box; /* 패딩을 너비에 포함 */
+}
+.input-table button {
+  width: 100%; /* 버튼 전체 너비 사용 */
+  padding: 10px 0; /* 버튼 패딩 조정 */
+  margin-top: 10px; /* 버튼 상단 마진 추가 */
+}
+.input-table tr:last-child td {
+  text-align: center; /* 마지막 행의 셀 텍스트 중앙 정렬 */
 }

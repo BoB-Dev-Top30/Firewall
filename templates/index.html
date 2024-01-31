@@ -43,7 +43,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             
-                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <div class="sb-sidenav-menu-heading">Core</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 CRUD
@@ -66,20 +66,15 @@
                                     <a class="nav-link" href="./log">Ip-Tables Dashboard</a>
                                 </nav>
                             </div>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="charts.html">
+                            <div class="sb-sidenav-menu-heading">Detail_Management</div>
+                            <a class="nav-link" href="./packet_simulate">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
+                                Packet-Simulation
                             </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                   
                     </div>
                 </nav>
             </div>
@@ -99,13 +94,13 @@
                                             <th>Number</th>
                                             <th>Packets</th>
                                             <th>Bytes</th>
-                                            <th>Target</th>
+                                            <th>Action</th>
                                             <th>Protocol</th>
                                             <th>Opt</th>
-                                            <th>In</th>
-                                            <th>Out</th>
-                                            <th>Source</th>
-                                            <th>Destination</th>
+                                            <th>Src_Port</th>
+                                            <th>Dest_Port</th>
+                                            <th>Src_Ip</th>
+                                            <th>Dest_Ip</th>
                                             <th>Details</th>
                                         </tr>
                                         {% for rule in rules %}
@@ -117,15 +112,18 @@
                                             <td>{{ rule.target }}</td>
                                             <td>{{ rule.protocol }}</td>
                                             <td>{{ rule.opt }}</td>
-                                            <td>{{ rule.in }}</td>
-                                            <td>{{ rule.out }}</td>
-                                            <td>{{ rule.source }}</td>
-                                            <td>{{ rule.destination }}</td>
+                                            <td>{{ rule.src_port }}</td>
+                                            <td>{{ rule.dest_port }}</td>
+                                            <td>{{ rule.src_ip }}</td>
+                                            <td>{{ rule.dest_ip }}</td>
                                             <td>{{ rule.details }}</td>
                                         </tr>
                                         {% endfor %}
                                     </table>
                                     <div style="display: flex; justify-content: flex-end;">
+                                        <button type="button" onclick="updateAction('unused', 'rule-form-{{ chain_name }}')" class="unused-button">
+                                            Unused <img src="../static/icon/submit.png" width="30" height="30">
+                                        </button>
                                         <button type="button" onclick="updateAction('delete', 'rule-form-{{ chain_name }}')" class="delete-button">
                                             Delete <img src="../static/icon/submit.png" width="30" height="30"> 
                                         </button>
@@ -140,13 +138,13 @@
                             </div>
                         </div>
                         <div style="height: 100vh"></div>
-                        <div class="card mb-4"><div class="card-body">When scrolling, the navigation stays at the top of the page. This is the end of the static navigation demo.</div></div>
+                        
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div class="text-muted">Copyright &copy; Changwook Song BoB 2023</div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
@@ -162,8 +160,17 @@
         
         <script>
             window.onload = function() {
-                {% if success %}
+                {% if success=="delete" %}
                     alert("규칙이 성공적으로 삭제되었습니다.");
+                {% endif %}
+                {% if success=="unused" %}
+                    alert("미사용 정책을 추출하였습니다.");
+                {% endif %}
+                {% if success=="no-unused" %}
+                    alert("미사용 정책이 없습니다.");
+                {% endif %}
+                {% if success=="detail" %}
+                    alert("필터링된 정책들 입니다.");
                 {% endif %}
             };
         </script>
@@ -176,7 +183,7 @@
             var checkboxes = form.querySelectorAll('input[type="checkbox"]');
             var checkedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
 
-            if (checkedCount === 0) {
+            if ((actionType === 'update' && checkedCount === 0)|| (actionType === 'delete' && checkedCount === 0)) {
                 alert("체크박스를 선택해주세요.");
                 return;
             }
@@ -190,6 +197,8 @@
                 form.action = "{{ url_for('delete_rule', chain_name='') }}" + chainName;
             } else if (actionType === 'update') {
                 form.action = "{{ url_for('update_rule', chain_name='') }}" + chainName;
+            } else if (actionType === 'unused') {
+                form.action = "{{ url_for('unused_rule', chain_name='') }}" + chainName;
             }
         form.submit();
     }

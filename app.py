@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session, Response
 import subprocess
 
 # 자체 제작 모듈
@@ -9,9 +9,15 @@ from MONITOR.Parse_Monitor import *
 from MONITOR.Search import *
 from MONITOR.Process_Log import *
 
-app = Flask(__name__)
+from DETAIL.Parse_Detail import *
+from DETAIL.Match_Algo import *
 
 import json
+import os
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
+
 
 
 @app.route("/")
@@ -73,6 +79,7 @@ def index():
     success = request.args.get('success', False)
     iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
     chains = parse_iptables(iptables_output)
+    print("chain입니다.", chains)
     return render_template('index.html', chains=chains, success=success)
 
 
@@ -84,7 +91,7 @@ def delete_rule(chain_name):
     for rule_number in selected_rules:
         try:
             subprocess.run(['sudo', 'iptables', '-D', chain_name, rule_number], check=True)
-            success = True
+            success = "delete"
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             # success = False
@@ -98,6 +105,27 @@ def update_rule(chain_name):
     selected_rules = request.form.getlist('rule_to_change')
     rule_number = selected_rules[0] # 1개만 가능
     return redirect(url_for('update', rule_number =rule_number, chain_name=chain_name))
+
+# 체인이름 전달
+@app.route('/unused_rule/<chain_name>', methods=['POST'])
+def unused_rule(chain_name):
+    
+    success=False
+    print(chain_name)
+    try:
+        chain_name = chain_name.upper()
+        iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
+        chains = parse_iptables(iptables_output)
+        print(chains)
+        
+        unused_policy = parse_unused(chains, chain_name)
+        success="unused"
+        if(len(unused_policy[chain_name])==0):
+            success="no-unused"
+    except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+
+    return render_template('index.html', chains=unused_policy, success=success)
 
 
 @app.route('/update', methods=['GET', 'POST'])
@@ -157,7 +185,10 @@ def network_state():
         command = "sudo conntrack -L | grep -E 'ESTABLISHED|RELATED' | grep -v '127.0.0.1'"
         state_info = subprocess.run(command, shell=True, check=True, text=True, stdout=subprocess.PIPE)
         state_info = conntrack_parser(state_info.stdout)
+
+        print(state_info)
     except subprocess.CalledProcessError as e:
+        state_info = None
         print(f"An error occurred: {e}")
         
     if(request.method=='POST'):
@@ -221,7 +252,9 @@ def api_log():
         command = 'grep network_log /var/log/syslog'
         log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
         
+        print(log_info)
         processed_log = log_parser(log_info.stdout)
+        print(processed_log)
 
         # 날짜별 데이터
         time_list, time_count_list = get_time_data(processed_log)
@@ -241,7 +274,6 @@ def api_log():
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
-    print(Input)
     data = {
     "time": {
         "labels": time_list,
@@ -275,17 +307,73 @@ def api_log():
 def log():
 
     return render_template('log.html')
-    '''
-    try:
-        # 로그 전체정보 가지고오기
-        command = 'grep network_log /var/log/syslog'
-        log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
+
+# Ajax로 막대그래프 (매치된거와 안매치된거)
+@app.route('/packet_simulate', methods=["GET","POST"])
+def packet_simulate():
+
+    if(request.method == "POST"):
+        print(request.data)
+        data = request.json  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+        print(data)
+        src_ip = str(data.get('src_ip'))
+        dst_ip = str(data.get('dst_ip'))
+        src_port = str(data.get('src_port'))
+        dst_port = str(data.get('dst_port'))
+        protocol = str(data.get('protocol'))
+
+        print(data)
+        packet = {"src_ip":"", "dst_ip":"", "src_port":"", "dst_port":"", "protocol":""}
+        packet["src_ip"] = src_ip
+        packet["dst_ip"] =  dst_ip
+        packet["src_port"] =  src_port
+        packet["dst_port"] =  dst_port
+        packet["protocol"] =  protocol
+
+        print("생성된 패킷", packet)
+
+        iptables_output = subprocess.check_output(['sudo', 'iptables', '-nvL', '--line-numbers']).decode('utf-8')
         
-        processed_log = log_parser(log_info.stdout)
-        print(processed_log)
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
-    '''
+        chains = parse_iptables(iptables_output)
+        
+        matched_chain, unmatched_chain, matched_chain_num, unmatched_chain_num = Match_Rule(packet, chains)
+
+        print("matched", matched_chain)
+
+        
+        data = {
+            "labels" : ["Matched", "Un-Matched"],
+            "values" : [matched_chain_num, unmatched_chain_num],
+            "original_values" : [matched_chain, unmatched_chain]
+            }
+
+        json_data = json.dumps(data, sort_keys=False)
+        return Response(json_data, mimetype='application/json')
+    return render_template("packet_simulate.html")
+
+@app.route('/matched', methods=['POST'])
+def matched():
+    data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+    chains = data['original_values']
+    print("/matched에서의 chains", chains)
+    json_data = json.dumps({'chains': chains}, sort_keys=False)
+    return Response(json_data, mimetype='application/json')
+
+@app.route('/unmatched', methods=['POST'])
+def unmatched():
+    data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
+    chains = data['original_values']
+    print("/unmatched에서의 chains", chains)
+    json_data = json.dumps({'chains': chains}, sort_keys=False)
+    return Response(json_data, mimetype='application/json')
+
+@app.route('/match_table', methods=['POST'])
+def match_table():
+    data = request.get_json()
+    print("data", data)
+    chains = data['chains']
+    print("chain입니다.", chains)
+    return render_template('match_table.html', chains=chains, success="detail")
 
 if __name__ == "__main__":
     app.run(debug=True)
