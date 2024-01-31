@@ -11261,11 +11261,11 @@ body {
 
 .delete-button {
   width: 100px; /* 버튼 너비 */
-  height: 50px; /* 버튼 높이 */
+  height: 40px; /* 버튼 높이 */
   font-size: 15px; /* 글자 크기 */
   background-color: whitesmoke; /* 배경색 */
   color: black; /* 글자색 */
-  padding: 12px 20px; /* 패딩 */
+  padding: 8px 15px; /* 패딩 */
   border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer; /* 마우스 오버시 커서 변경 */
   display: flex; /* Flexbox 사용 */
@@ -11280,11 +11280,11 @@ body {
 
 .update-button {
   width: 100px; /* 버튼 너비 */
-  height: 50px; /* 버튼 높이 */
+  height: 40px; /* 버튼 높이 */
   font-size: 15px; /* 글자 크기 */
   background-color: whitesmoke; /* 배경색 */
   color: black; /* 글자색 */
-  padding: 12px 20px; /* 패딩 */
+  padding: 8px 15px; /* 패딩 */
   border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer; /* 마우스 오버시 커서 변경 */
   display: flex; /* Flexbox 사용 */
@@ -11298,12 +11298,12 @@ body {
 }
 
 .unused-button {
-  width: 165px; /* 버튼 너비 */
-  height: 50px; /* 버튼 높이 */
+  width: 100px; /* 버튼 너비 */
+  height:40px; /* 버튼 높이 */
   font-size: 15px; /* 글자 크기 */
   background-color: whitesmoke; /* 배경색 */
   color: black; /* 글자색 */
-  padding: 12px 20px; /* 패딩 */
+  padding: 8px 15px; /* 패딩 */
   border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer; /* 마우스 오버시 커서 변경 */
   display: flex; /* Flexbox 사용 */
