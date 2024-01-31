@@ -1,6 +1,7 @@
 from netfilterqueue import NetfilterQueue
 import scapy.all as scapy
 import re
+from collections import defaultdict
 
 
 ######자체제작 패키지와 모듈########
@@ -12,19 +13,37 @@ import logging
 logging.basicConfig(filename="http_traffic.log", level=logging.INFO, format="%(asctime)s - %(message)s")
 
 def process_packet(packet):
+    attack_counter = defaultdict(int)
     scapy_packet = scapy.IP(packet.get_payload())
+
+
+    src_ip = scapy_packet[scapy.IP].src
+    dst_ip = scapy_packet[scapy.IP].dst
+    src_port = scapy_packet[scapy.TCP].sport
+    dst_port = scapy_packet[scapy.TCP].dport
+
+    # 프로토콜 정보 추출
+    protocol = scapy_packet[scapy.IP].proto
+    protocol_name = scapy_packet[scapy.IP].sprintf("%IP.proto%")
+
     if scapy_packet.haslayer(scapy.TCP) and scapy_packet.haslayer(scapy.Raw):
         payload = scapy_packet[scapy.Raw].load.decode(errors="ignore")
         
         if "HTTP" in payload:
-            payload가 데이터임
             # XSS 공격 패턴
-            payload = DP-Xss(payload)
+            payload, xss_detected = DP-Xss(payload)
 
             # SQL 인젝션 공격 패턴
-            payload = DP-Sql-Injection(payload)
+            payload, sql_detected = DP-Sql-Injection(payload)
+            if xss_detected or sql_injection_detected:
+                # 공격 카운터 증가
+                attack_key = (src_ip, dst_ip, src_port, dst_port, protocol_name, "XSS" if xss_detected else "SQL Injection")
+                attack_counter[attack_key] += 1
+
+                # 로그에 공격 정보 기록
+                logging.info(f"공격 타입: {'XSS' if xss_detected else 'SQL Injection'}, 소스 IP: {src_ip}, 목적지 IP: {dst_ip}, 소스 포트: {src_port}, 목적지 포트: {dst_port}, 프로토콜: {protocol_name}, 공격 횟수: {attack_counter[attack_key]}")
             
-            # 패킷 수정
+            # 바뀐 안전한 패킷으로 수정
             scapy_packet[scapy.Raw].load = payload.encode()
             del scapy_packet[scapy.IP].len
             del scapy_packet[scapy.IP].chksum
