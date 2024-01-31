@@ -188,6 +188,7 @@ def network_state():
 
         print(state_info)
     except subprocess.CalledProcessError as e:
+        state_info = None
         print(f"An error occurred: {e}")
         
     if(request.method=='POST'):
