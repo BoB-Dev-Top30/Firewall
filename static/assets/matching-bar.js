@@ -29,52 +29,26 @@ $(document).ready(function() {
                 success: function(data) {
                     // AJAX 요청 성공 시 그래프 그리기
                     drawGraph(data);
+                    // 기존 버튼 컨테이너 비우기
+                    var $btnContainer = $('#MatchLinkButton').empty();
 
-                    // 버튼 생성
-                    var $btnContainer = $('<div/>');
+                    // 'Matched Info' 버튼 생성 및 클릭 이벤트 핸들링
                     $('<button/>', {
                         text: 'Matched Info',
                         id: 'matchedInfoBtn'
                     }).click(function() {
-                        $.ajax({
-                            url: './matched',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            dataType: 'json',
-                            data: JSON.stringify({ original_values: data.original_values[0] }),
-                            success: function(response) {
-                                console.log(response);
-                                console.log(data);
-                                window.location.href = response.redirect;
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                console.log(data)
-                                console.error(textStatus, errorThrown);
-                            }
-                        });
+                        fetchAndSendData(data.original_values[0], './matched');
                     }).appendTo($btnContainer);
 
+                    // 'Un-Matched Info' 버튼 생성 및 클릭 이벤트 핸들링
                     $('<button/>', {
                         text: 'Un-Matched Info',
                         id: 'unmatchedInfoBtn'
                     }).click(function() {
-                        $.ajax({
-                            url: './unmatched',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            dataType: 'json',
-                            data: JSON.stringify({ original_values: data.original_values[1] }),
-                            success: function(response) {
-                                console.log(response);
-                                console.log("Data to be sent:", JSON.stringify({ original_values: data.original_values[1] }));
-                                window.location.href = response.redirect;
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                console.error(textStatus, errorThrown);
-                            }
-                        });
+                        fetchAndSendData(data.original_values[1], './unmatched');
                     }).appendTo($btnContainer);
-
+                    
+                    
                     // 생성한 버튼을 원하는 위치에 추가
                     $('#MatchLinkButton').append($btnContainer);
                 },
@@ -85,6 +59,41 @@ $(document).ready(function() {
             });
         });
     });
+    
+    function fetchAndSendData(originalValues, url) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({ original_values: originalValues }),
+            success: function(response) {
+                sendToMatchTable(response);
+                console.log(response)
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+            }
+        });
+    }
+
+    function sendToMatchTable(data) {
+        $.ajax({
+            url: '/match_table',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                // 성공 처리 로직
+                document.open();
+                document.write(response);
+                document.close();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+            }
+        });
+    }
 
     function drawGraph(data) {
         var ctx = document.getElementById("MatchingBarChart").getContext('2d');

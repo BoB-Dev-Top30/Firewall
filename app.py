@@ -355,10 +355,7 @@ def matched():
     data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
     chains = data['original_values']
     print("/matched에서의 chains", chains)
-    session['chains'] = chains
-
-    response_data = {'redirect': url_for('index')}
-    json_data = json.dumps(response_data, sort_keys=False)
+    json_data = json.dumps({'chains': chains}, sort_keys=False)
     return Response(json_data, mimetype='application/json')
 
 @app.route('/unmatched', methods=['POST'])
@@ -366,15 +363,13 @@ def unmatched():
     data = request.get_json()  # AJAX 요청에서 JSON 데이터를 딕셔너리로 받음
     chains = data['original_values']
     print("/unmatched에서의 chains", chains)
-    session['chains'] = chains
-
-    response_data = {'redirect': url_for('match_table')}
-    json_data = json.dumps(response_data, sort_keys=False)
+    json_data = json.dumps({'chains': chains}, sort_keys=False)
     return Response(json_data, mimetype='application/json')
 
-@app.route('/match_table', methods=['GET'])
+@app.route('/match_table', methods=['POST'])
 def match_table():
     data = request.get_json()
+    print("data", data)
     chains = data['chains']
     print("chain입니다.", chains)
     return render_template('match_table.html', chains=chains, success="detail")
