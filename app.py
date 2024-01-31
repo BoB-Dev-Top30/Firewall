@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session, Response
 import subprocess
-
-# 자체 제작 모듈
+import json
+import os
+####### 자체 제작 패키지&모듈 ###############
 from CRUD.Crud_Rule import *
 from CRUD.Parse_Table import *
 
@@ -12,67 +13,55 @@ from MONITOR.Process_Log import *
 from DETAIL.Parse_Detail import *
 from DETAIL.Match_Algo import *
 
-import json
-import os
+from WEB_FW.Command import *
+###############################################
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-
-
 
 @app.route("/")
 def home():
     return redirect(url_for('index'))
 
-'''
-@app.route("/block_ip", methods=["POST"])
-def block_ip():
-    ip_to_block = request.form.get("ip")
-    print("차단할 IP: ", ip_to_block)
-    blocked_ips.append(ip_to_block)
-    
+@app.route("/create", methods=["GET", "POST"])
+def create():
+    if(request.method=="POST"):
+        rule = {"traffic_type":"","action":"", "src_ip":"", "dst_ip":"", "protocol":"", "src_port":"", "dst_port":"", "in_interface":"", "out_interface":""}
+        rule["traffic_type"] = request.form.get("traffic_type")
+        rule["priority"] = request.form.get("priority")
+        rule["action"] = request.form.get("action")
+        rule["src_ip"] = request.form.get("src_ip")
+        rule["dst_ip"] = request.form.get("dst_ip")
+        rule["protocol"] = request.form.get("protocol")
+        rule["src_port"] = request.form.get("src_port")
+        rule["dst_port"] = request.form.get("dst_port")
+        # rule["in_interface"] = request.form.get("in_interface")
+        # rule["out_interface"] = request.form.get("out_interface")
+        rule["application"] = request.form.get("application")
+        
+        processed_rule = Process_Create_Rule(rule)
+        processed_rule2 = Process_Create_Rule(rule, log=1)
 
-    subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-s", ip_to_block, "-j", "DROP"])
-    return render_template("crud.html", blocked_ips=blocked_ips)
-'''
-@app.route("/create", methods=["GET"])
-def create1():
+        print("가공된 rule : ", processed_rule)
+        
+
+        command = "sudo " + "iptables" + processed_rule
+        command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + "network_log" + "_" + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
+        
+        success = False
+        try:
+            subprocess.run(command2.split(), check=True)
+            subprocess.run(command.split(), check=True)
+            
+            # 웹 방화벽을 위한 큐로 넘기는 설정 명령어
+            web_command(rule["application"], rule["priority"], rule["traffic_type"])
+            success = True
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+
+        return render_template("create.html", success=success)
+
     return render_template("create.html")
-
-
-@app.route("/create", methods=["POST"])
-def create2():
-    rule = {"traffic_type":"","action":"", "src_ip":"", "dst_ip":"", "protocol":"", "src_port":"", "dst_port":"", "in_interface":"", "out_interface":""}
-    rule["traffic_type"] = request.form.get("traffic_type")
-    rule["priority"] = request.form.get("priority")
-    rule["action"] = request.form.get("action")
-    rule["src_ip"] = request.form.get("src_ip")
-    rule["dst_ip"] = request.form.get("dst_ip")
-    rule["protocol"] = request.form.get("protocol")
-    rule["src_port"] = request.form.get("src_port")
-    rule["dst_port"] = request.form.get("dst_port")
-    # rule["in_interface"] = request.form.get("in_interface")
-    # rule["out_interface"] = request.form.get("out_interface")
-    rule["application"] = request.form.get("application")
-    
-    processed_rule = Process_Create_Rule(rule)
-    processed_rule2 = Process_Create_Rule(rule, log=1)
-
-    print("가공된 rule : ", processed_rule)
-    
-
-    command = "sudo " + "iptables" + processed_rule
-    command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + "network_log" + "_" + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
-    
-    success = False
-    try:
-        subprocess.run(command2.split(), check=True)
-        subprocess.run(command.split(), check=True)
-        success = True
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
-
-    return render_template("create.html", success=success)
 
 @app.route('/index')
 def index():
@@ -377,23 +366,3 @@ def match_table():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-'''
-@app.route("/unblock_ip/<ip>", methods=["POST"])
-def unblock_ip(ip):
-    blocked_ips.remove(ip)
-    subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip, "-j", "DROP"])
-    return render_template("crud.html", blocked_ips=blocked_ips)
-'''
-
-
-
-'''
-@app.route("/unblock_ip/<ip>", methods=["POST"])
-def unblock_ip(ip):
-    blocked_ips.remove(ip)
-    subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip, "-j", "DROP"])
-    return render_template("crud.html", blocked_ips=blocked_ips)
-if __name__ == "__main__":
-    app.run(debug=True)
-    '''
