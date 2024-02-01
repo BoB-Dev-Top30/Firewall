@@ -5,8 +5,8 @@ from collections import defaultdict
 
 
 ######자체제작 패키지와 모듈########
-from WEB_FW.DP_Sql-Injection import *
-from WEB_FW.Xss import *
+from WEB_FW.DP_Sql_Injection import *
+from WEB_FW.DP_Xss import *
 ##################################
 
 import logging
@@ -30,12 +30,20 @@ def process_packet(packet):
         payload = scapy_packet[scapy.Raw].load.decode(errors="ignore")
         
         if "HTTP" in payload:
+            print("I GOT HTTP")
+            if "GET" in payload:
+                print("I GOT GET")
+
+            if "POST" in payload:
+                print("I GOT POST")
+
             # XSS 공격 패턴
-            payload, xss_detected = DP-Xss(payload)
+            payload, xss_detected = DP_Xss(payload)
 
             # SQL 인젝션 공격 패턴
-            payload, sql_detected = DP-Sql-Injection(payload)
-            if xss_detected or sql_injection_detected:
+            payload, sql_detected = DP_Sql_Injection(payload)
+            if xss_detected or sql_detected:
+                print("I GOT ATTACK")
                 # 공격 카운터 증가
                 attack_key = (src_ip, dst_ip, src_port, dst_port, protocol_name, "XSS" if xss_detected else "SQL Injection")
                 attack_counter[attack_key] += 1

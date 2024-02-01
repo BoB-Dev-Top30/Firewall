@@ -1,6 +1,6 @@
 import re
 
-def DP-Xss(payload):
+def DP_Xss(payload):
     xss_detected=0
     xss_patterns = [r"<script.*?>.*?</script>", r"javascript:[\s\S]*"]
     xss_regex = re.compile('|'.join(xss_patterns), re.IGNORECASE)

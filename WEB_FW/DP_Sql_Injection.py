@@ -1,6 +1,6 @@
 import re
 
-def DP-Sql-Injection(payload):
+def DP_Sql_Injection(payload):
     sql_detected=0
     sql_injection_patterns = [r"SELECT .* FROM .*", r"INSERT INTO .* VALUES .*", r"DELETE FROM .* WHERE .*"]
     sql_injection_regex = re.compile('|'.join(sql_injection_patterns), re.IGNORECASE)
