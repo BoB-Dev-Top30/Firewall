@@ -20,8 +20,7 @@
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                    
                 </div>
             </form>
             <!-- Navbar-->
@@ -69,6 +68,10 @@
                             <a class="nav-link" href="./packet_simulate">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Packet-Simulation
+                            </a>
+                            <a class="nav-link" href="./web_firewall">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                WEB-Firewall
                             </a>
                         </div>
                     </div>
@@ -131,12 +134,9 @@
 
                                     </select>
                                 
-                                
-                                
                                 <label for="application">어플리케이션 방화벽:</label>
                                 <select id="application" name="application">
-                                    <option value="xss">XSS</option>
-                                    <option value="sql">SQL_Injection</option>
+                                    <option value="yes_application">사용</option>
                                     <option value="no_application">사용안함</option>
                                 </select>
                                 </div>
@@ -151,10 +151,7 @@
                                 <input type="text" id="dst_ip" name="dst_ip" placeholder="예: 192.168.1.1(CIDR지원)" style="color: grey;">
                                 </div>
 
-                                <br>
-                                
-                                
-                            
+                                <br>          
                                 
                                 <div style="margin-bottom: 10px;">
                                 <label for="src_port">출발지 포트 번호:</label>

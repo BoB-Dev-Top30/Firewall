@@ -30,7 +30,7 @@ def conntrack_parser(state_info):
 
 
 def log_parser(log_info):
-    pattern = r'(\w{3} \d{2} \d{2}:\d{2}:\d{2}).*network_log_(\w+)_(\w+):.*SRC=(\d{1,3}(?:\.\d{1,3}){3}).*DST=(\d{1,3}(?:\.\d{1,3}){3}).*LEN=(\d+).*PROTO=(\w+)'
+    pattern = r'(\w{3}  \d{1,2} \d{2}:\d{2}:\d{2}) ubuntu20-2 kernel: \[\d+\.\d+\] network_log_(\w+?)_(\w+?):IN=.* SRC=(\d{1,3}(?:\.\d{1,3}){3}) DST=(\d{1,3}(?:\.\d{1,3}){3}) LEN=(\d+).*PROTO=(\w+).*'
     
     parsed_data_list=[]
 
@@ -55,5 +55,4 @@ def log_parser(log_info):
                 "protocol": protocol,
             }
             parsed_data_list.append(parsed_data)
-
     return parsed_data_list

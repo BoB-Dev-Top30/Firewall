@@ -11316,6 +11316,8 @@ body {
   background-color: yellow; /* 마우스 오버시 배경색 변경 */
 }
 
+
+
 #matchedInfoBtn {
   width: 165px; /* 버튼 너비 */
   height: 50px;
@@ -11364,6 +11366,41 @@ body {
   margin: 0 !important; /* 마진 강제 제거 */
 }
 
+#xssInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  background-color: whitesmoke; /* 배경색 */
+  
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#xssInfoBtn:hover {
+  background-color: green; /* 마우스 오버시 배경색 변경 */
+}
+
+#sqlInfoBtn {
+  width: 165px; /* 버튼 너비 */
+  height: 50px;
+  
+  background-color: whitesmoke; /* 배경색 */
+  color: black; /* 글자색 */
+  
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
+  
+  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+  
+  transition: background-color 0.3s; /* 배경색 변경시 전환 효과 */
+}
+
+#sqlInfoBtn:hover {
+  background-color: red; /* 마우스 오버시 배경색 변경 */
+}
 
 /* iptables-table 테이블 스타일 */
 #iptables-table {
@@ -11419,4 +11456,49 @@ body {
 }
 .input-table tr:last-child td {
   text-align: center; /* 마지막 행의 셀 텍스트 중앙 정렬 */
+}
+
+
+
+
+
+
+
+.form-container {
+  max-width: 800px; /* 컨테이너 너비 조정 */
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.flex-row > div {
+  flex: 1; /* 자식 요소들이 동일한 너비를 가지도록 설정 */
+  padding-right: 10px; /* 요소 간 간격 조정 */
+}
+.flex-row > div:last-child {
+  padding-right: 0; /* 마지막 요소의 오른쪽 패딩 제거 */
+}
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.submit-button:hover {
+  background-color: #0056b3;
 }

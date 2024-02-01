@@ -16,7 +16,6 @@ def get_time_data(processed_log):
     # 결과를 반환
     return months, counts
 
-    return 
 def get_action_data(processed_log):
     allow=0
     deny=0
