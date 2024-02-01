@@ -14,6 +14,7 @@ from DETAIL.Parse_Detail import *
 from DETAIL.Match_Algo import *
 
 from WEB_FW.Command import *
+from WEB_FW.Process_Log import *
 ###############################################
 
 app = Flask(__name__)
@@ -363,6 +364,37 @@ def match_table():
     chains = data['chains']
     print("chain입니다.", chains)
     return render_template('match_table.html', chains=chains, success="detail")
+
+# 웹 방화벽 정보주는 api
+@app.route('/api/web')
+def api_web():
+    try:
+        # 로그 전체정보 가지고오기
+        xss_log, sql_injection_log, xss_log_count, sql_injection_log_count, time_list, time_count_list = web_parse_logs('http_traffic.log')
+
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+
+    data = {
+    "webtime": {
+        "labels": time_list,
+        "values": time_count_list
+    },
+
+    "firewall": {
+        "labels": ["XSS", "SQL-Injection"],
+        "values": [xss_log_count, sql_injection_log_count]
+    },
+    }
+    return jsonify(data)
+
+
+@app.route('/web_firewall', methods=["GET"])
+def web_firewall():
+
+    return render_template("web_firewall.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
