@@ -10,37 +10,37 @@ def state_search(state_info, user_input):
         if str(user_input) in str(state['protocol']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['connection_state']:
+        elif str(user_input) in str(state['connection_state']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['timeout']:
+        elif str(user_input) in str(state['timeout']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['src1']:
+        elif str(user_input) in str(state['src1']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['dst1']:
+        elif str(user_input) in str(state['dst1']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['sport1']:
+        elif str(user_input) in str(state['sport1']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['dport1']:
+        elif str(user_input) in str(state['dport1']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['src2']:
+        elif str(user_input) in str(state['src2']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['dst2']:
+        elif str(user_input) in str(state['dst2']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['sport2']:
+        elif str(user_input) in str(state['sport2']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['dport2']:
+        elif str(user_input) in str(state['dport2']):
             searched_state_info.append(state)
             continue
-        elif str(user_input) in state['additional_info']:
+        elif str(user_input) in str(state['additional_info']):
             searched_state_info.append(state)
             continue
     return searched_state_info
@@ -52,17 +52,17 @@ def log_search(log_info, user_input):
         if str(user_input) in str(log['date_time']):
             searched_log_info.append(log)
             continue
-        elif str(user_input) in log['chain']:
+        elif str(user_input) in str(log['chain']):
             searched_log_info.append(log)
-        elif str(user_input) in log['activity']:
+        elif str(user_input) in str(log['activity']):
             searched_log_info.append(log)
-        elif str(user_input) in log['src_ip']:
+        elif str(user_input) in str(log['src_ip']):
             searched_log_info.append(log)
-        elif str(user_input) in log['dst_ip']:
+        elif str(user_input) in str(log['dst_ip']):
             searched_log_info.append(log)
-        elif str(user_input) in log['packet_length']:
+        elif str(user_input) in str(log['packet_length']):
             searched_log_info.append(log)   
-        elif str(user_input) in log['protocol']:
+        elif str(user_input) in str(log['protocol']):
             searched_log_info.append(log)
 
     return searched_log_info

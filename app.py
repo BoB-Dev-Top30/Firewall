@@ -15,6 +15,7 @@ from DETAIL.Match_Algo import *
 
 from WEB_FW.Command import *
 from WEB_FW.Process_Log import *
+from WEB_FW.Search import *
 ###############################################
 
 app = Flask(__name__)
@@ -404,7 +405,8 @@ def xss_log():
     if(request.method == "POST"):
         try:
             user_input = request.form.get("user_input")
-            filtered_xss_log_info = web_search(user_input)
+
+            filtered_xss_log_info = web_search(user_input, xss_log_info)
             success=True
             if len(filtered_xss_log_info)==0:
                 print("결과 없음")
@@ -428,7 +430,8 @@ def sql_injection_log():
     if(request.method == "POST"):
         try:
             user_input = request.form.get("user_input")
-            filtered_sql_log_info = xss_search(user_input)
+
+            filtered_sql_log_info = web_search(user_input, sql_log_info)
             success=True
             if len(filtered_log_info)==0:
                 print("결과 없음")
