@@ -386,15 +386,59 @@ def api_web():
         "values": [xss_log_count, sql_injection_log_count]
     },
     }
+    print(xss_log)
     return jsonify(data)
 
 
 @app.route('/web_firewall', methods=["GET"])
 def web_firewall():
-
     return render_template("web_firewall.html")
 
+@app.route('/xss_log', methods=["GET", "POST"])
+def xss_log():
+    # 기본 로그 데이터 GET
+    xss_log, sql_injection_log, xss_log_count, sql_injection_log_count, time_list, time_count_list = web_parse_logs('http_traffic.log')
 
+    xss_log_info = xss_log
+    # 검색
+    if(request.method == "POST"):
+        try:
+            user_input = request.form.get("user_input")
+            filtered_xss_log_info = web_search(user_input)
+            success=True
+            if len(filtered_xss_log_info)==0:
+                print("결과 없음")
+                success = "No Answer"
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            success=False
+
+        return render_template("xss_log.html", xss_info = filtered_xss_log_info)
+
+    return render_template("xss_log.html", xss_info = xss_log_info)
+
+
+@app.route('/sql_injection_log', methods=["GET", "POST"])
+def sql_injection_log():
+    # 기본 로그 데이터 GET
+    xss_log, sql_injection_log, xss_log_count, sql_injection_log_count, time_list, time_count_list = web_parse_logs('http_traffic.log')
+    
+    sql_log_info = sql_injection_log
+    # 검색
+    if(request.method == "POST"):
+        try:
+            user_input = request.form.get("user_input")
+            filtered_sql_log_info = xss_search(user_input)
+            success=True
+            if len(filtered_log_info)==0:
+                print("결과 없음")
+                success = "No Answer"
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            success=False
+
+        return render_template("sql_injection_log.html", sql_info = filtered_sql_log_info)
+    return render_template("sql_injection_log.html", sql_info =sql_log_info)
 
 if __name__ == "__main__":
     app.run(debug=True)
