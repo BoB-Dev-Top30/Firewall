@@ -211,7 +211,7 @@ def log_more():
         log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
         
         processed_log = log_parser(log_info.stdout)
-        print(processed_log)
+        print("################processed_log###############", processed_log )
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
@@ -243,9 +243,9 @@ def api_log():
         command = 'grep network_log /var/log/syslog'
         log_info = subprocess.run(command.split(), check=True, capture_output=True, text=True)
         
-        print(log_info)
+        print("log_info\n",log_info.stdout)
         processed_log = log_parser(log_info.stdout)
-        print(processed_log)
+        print("processed_log in api\n", processed_log)
 
         # 날짜별 데이터
         time_list, time_count_list = get_time_data(processed_log)

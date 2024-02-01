@@ -141,8 +141,7 @@
             window.onload = function() {
                 {% if success %}
                     alert("검색이 성공적으로 수행되었습니다.");
-                {% endif %}
-                {% if success=="No Answer" %}
+                {% elif success=="No Answer" %}
                     alert("검색결과가 없습니다.");
                 {% endif %}
             };
