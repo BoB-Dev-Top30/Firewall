@@ -85,7 +85,7 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> Ip-Table Dashboard </h1>
+                        <h1 class="mt-4"><img src="../static/icon/iptable.png" width="80" height="80"> Web-Firewall Dashboard </h1>
     
                         <div class="card mb-4">
                             <div class="card-header">
@@ -105,6 +105,11 @@
                                 <div class="card-footer small text-muted">Updated</div>
                             </div>
                         </div>
+                        <div class="col-lg-10 mx-auto d-flex justify-content-center" id="WebLinkButton">
+                            <button onclick="location.href='/xss_log.html'" id ="xssInfoBtn">XSS Log</button>
+                            <button onclick="location.href='/sql_injection_log.html'"id="sqlInfoBtn">SQL Injection Log</button>
+                        </div>
+
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
