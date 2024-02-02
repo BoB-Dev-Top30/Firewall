@@ -58,15 +58,17 @@ def create():
             priority = "-I"
         command = "sudo " + "iptables" + processed_rule
         command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + "network_log" + "_" + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
-        # command3 = "sudo " + "iptables " + priority+" "+ rule["traffic_type"].upper() + " -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+        command3 = "sudo " + "iptables " + priority+" "+ rule["traffic_type"].upper() + " -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+        command4 = "sudo " + "iptables " + priority + " " + rule["traffic_type"].upper() + " -p tcp --dport 80 -j NFQUEUE --queue-num 0"
         success = False
         try:
-            # subprocess.run(command3.split(), check=True)
+            subprocess.run(command4.split(), check=True)
+            subprocess.run(command3.split(), check=True)
             subprocess.run(command2.split(), check=True)
             subprocess.run(command.split(), check=True)
             
             # 웹 방화벽을 위한 큐로 넘기는 설정 명령어
-            web_command(rule["application"], rule["priority"], rule["traffic_type"])
+            # web_command(rule["application"], rule["priority"], rule["traffic_type"])
             success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")

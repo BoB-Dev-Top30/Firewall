@@ -66,7 +66,7 @@ def process_packet(packet):
     packet.accept()
 
 nfqueue = NetfilterQueue()
-nfqueue.bind(99, process_packet)
+nfqueue.bind(0, process_packet)
 
 try:
     nfqueue.run()
