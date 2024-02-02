@@ -193,7 +193,20 @@ def network_state():
 
         print(state_info)
     except subprocess.CalledProcessError as e:
-        state_info = None
+        state_info = {
+            'protocol':"",
+            'connection_state': "",
+            'timeout': "",
+            'src1': "",
+            'dst1': "",
+            'sport1': "",
+            'dport1': "",
+            'src2': "",
+            'dst2': "",
+            'sport2': "",
+            'dport2': "",
+            'additional_info': "",
+        }
         print(f"An error occurred: {e}")
         
     if(request.method=='POST'):
@@ -210,7 +223,6 @@ def network_state():
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             success=False
-
         return render_template('network_state.html', state_info=filtered_state_info, success=success)
     
     return render_template('network_state.html', state_info=state_info)
