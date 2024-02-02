@@ -21,6 +21,7 @@ from WEB_FW.Search import *
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+
 @app.route("/")
 def home():
     return redirect(url_for('index'))
@@ -34,7 +35,9 @@ def create():
         rule["action"] = request.form.get("action")
         rule["src_ip"] = request.form.get("src_ip")
         rule["dst_ip"] = request.form.get("dst_ip")
+
         rule["protocol"] = request.form.get("protocol")
+        
         rule["src_port"] = request.form.get("src_port")
         rule["dst_port"] = request.form.get("dst_port")
         # rule["in_interface"] = request.form.get("in_interface")
@@ -60,6 +63,8 @@ def create():
             success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
+
+        # 
 
         return render_template("create.html", success=success)
 
@@ -327,6 +332,7 @@ def packet_simulate():
         
         chains = parse_iptables(iptables_output)
         
+        print("최초의 chains\n", chains)
         matched_chain, unmatched_chain, matched_chain_num, unmatched_chain_num = Match_Rule(packet, chains)
 
         print("matched", matched_chain)
@@ -445,3 +451,4 @@ def sql_injection_log():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    subprocess.Popen(["sudo","-E","env",'"PATH=$PATH"', "python3", "Web_Firewall.py"])

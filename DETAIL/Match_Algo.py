@@ -44,6 +44,7 @@ def Match_Rule(packet, iptables_chains):
         matched_list = []
         unmatched_list = []
 
+        print("매치시켜야하는 구조\n", rules)
         for rule in rules:
             if (rule_matches_ip(packet["src_ip"], rule['src_ip']) and
                 rule_matches_ip(packet["dst_ip"], rule['dst_ip']) and
