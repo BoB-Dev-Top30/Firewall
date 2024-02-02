@@ -28,7 +28,6 @@ def process_packet(packet):
 
     if scapy_packet.haslayer(scapy.TCP) and scapy_packet.haslayer(scapy.Raw):
         payload = scapy_packet[scapy.Raw].load.decode(errors="ignore")
-        
         if "HTTP" in payload:
             print("I GOT HTTP")
             if "GET" in payload:
@@ -67,7 +66,7 @@ def process_packet(packet):
     packet.accept()
 
 nfqueue = NetfilterQueue()
-nfqueue.bind(0, process_packet)
+nfqueue.bind(99, process_packet)
 
 try:
     nfqueue.run()
