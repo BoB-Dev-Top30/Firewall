@@ -18,6 +18,8 @@ from WEB_FW.Process_Log import *
 from WEB_FW.Search import *
 ###############################################
 
+from multiprocessing import Process
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
@@ -448,7 +450,10 @@ def sql_injection_log():
 
         return render_template("sql_injection_log.html", sql_info = filtered_sql_log_info)
     return render_template("sql_injection_log.html", sql_info =sql_log_info)
+def run_script():
+    os.system("sudo -E env 'PATH=$PATH' python3 Web_Firewall.py")
 
 if __name__ == "__main__":
     app.run(debug=True)
-    subprocess.Popen(["sudo","-E","env",'"PATH=$PATH"', "python3", "Web_Firewall.py"])
+    p = Process(target=run_script)
+    p.start()
