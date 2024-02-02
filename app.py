@@ -261,7 +261,7 @@ def log_more():
     
     return render_template('log_more.html', log_info=processed_log)
 
-# 로그 테이블 찍는 api
+# 로그 테이블을 찍는 api
 @app.route('/api/log')
 def api_log():
     try:
