@@ -28,7 +28,6 @@ def process_packet(packet):
 
     if scapy_packet.haslayer(scapy.TCP) and scapy_packet.haslayer(scapy.Raw):
         payload = scapy_packet[scapy.Raw].load.decode(errors="ignore")
-        
         if "HTTP" in payload:
             print("I GOT HTTP")
             if "GET" in payload:
@@ -42,14 +41,19 @@ def process_packet(packet):
 
             # SQL 인젝션 공격 패턴
             payload, sql_detected = DP_Sql_Injection(payload)
+            print(xss_detected)
             if xss_detected or sql_detected:
                 print("I GOT ATTACK")
                 # 공격 카운터 증가
                 attack_key = (src_ip, dst_ip, src_port, dst_port, protocol_name, "XSS" if xss_detected else "SQL Injection")
                 attack_counter[attack_key] += 1
 
+                print("전달여부", xss_detected)
                 # 로그에 공격 정보 기록
-                logging.info(f"공격 타입: {'XSS' if xss_detected else 'SQL Injection'}, 소스 IP: {src_ip}, 목적지 IP: {dst_ip}, 소스 포트: {src_port}, 목적지 포트: {dst_port}, 프로토콜: {protocol_name}, 공격 횟수: {attack_counter[attack_key]}")
+                try:
+                    logging.info(f"공격 타입: {'XSS' if xss_detected else 'SQL Injection'}, 소스 IP: {src_ip}, 목적지 IP: {dst_ip}, 소스 포트: {src_port}, 목적지 포트: {dst_port}, 프로토콜: {protocol_name}, 공격 횟수: {attack_counter[attack_key]}")
+                except Exception as e:
+                    logging.error(f"Error processing packet: {e}")
             
             # 바뀐 안전한 패킷으로 수정
             scapy_packet[scapy.Raw].load = payload.encode()

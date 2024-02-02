@@ -18,9 +18,11 @@ from WEB_FW.Process_Log import *
 from WEB_FW.Search import *
 ###############################################
 
+from threading import Thread
+import subprocess
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-
 
 @app.route("/")
 def home():
@@ -50,16 +52,23 @@ def create():
         print("가공된 rule : ", processed_rule)
         
 
+        if(rule["priority"]=="normal"):
+            priority = "-A"
+        else:
+            priority = "-I"
         command = "sudo " + "iptables" + processed_rule
         command2 = "sudo " + "iptables" + processed_rule2 + " --log-prefix " + "network_log" + "_" + str(rule["traffic_type"])+"_"+str(rule["action"])+": "
-        
+        command3 = "sudo " + "iptables " + priority+" "+ rule["traffic_type"].upper() + " -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+        command4 = "sudo " + "iptables " + priority + " " + rule["traffic_type"].upper() + " -p tcp --dport 80 -j NFQUEUE --queue-num 0"
         success = False
         try:
+            subprocess.run(command4.split(), check=True)
+            subprocess.run(command3.split(), check=True)
             subprocess.run(command2.split(), check=True)
             subprocess.run(command.split(), check=True)
             
             # 웹 방화벽을 위한 큐로 넘기는 설정 명령어
-            web_command(rule["application"], rule["priority"], rule["traffic_type"])
+            # web_command(rule["application"], rule["priority"], rule["traffic_type"])
             success = True
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
@@ -184,7 +193,20 @@ def network_state():
 
         print(state_info)
     except subprocess.CalledProcessError as e:
-        state_info = None
+        state_info = {
+            'protocol':"",
+            'connection_state': "",
+            'timeout': "",
+            'src1': "",
+            'dst1': "",
+            'sport1': "",
+            'dport1': "",
+            'src2': "",
+            'dst2': "",
+            'sport2': "",
+            'dport2': "",
+            'additional_info': "",
+        }
         print(f"An error occurred: {e}")
         
     if(request.method=='POST'):
@@ -201,7 +223,6 @@ def network_state():
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             success=False
-
         return render_template('network_state.html', state_info=filtered_state_info, success=success)
     
     return render_template('network_state.html', state_info=state_info)
@@ -449,6 +470,10 @@ def sql_injection_log():
         return render_template("sql_injection_log.html", sql_info = filtered_sql_log_info)
     return render_template("sql_injection_log.html", sql_info =sql_log_info)
 
+def run_firewall_script():
+    subprocess.run(["sudo","-E","env",'"PATH=$PATH"', "python3", "Web_Firewall.py"])
+
 if __name__ == "__main__":
+    #firewall_thread = Thread(target=run_firewall_script)
+    #firewall_thread.start() 
     app.run(debug=True)
-    subprocess.Popen(["sudo","-E","env",'"PATH=$PATH"', "python3", "Web_Firewall.py"])

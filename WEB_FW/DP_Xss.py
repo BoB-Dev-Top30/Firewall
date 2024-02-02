@@ -26,5 +26,6 @@ def DP_Xss(payload):
     if xss_regex.search(payload):
         print("XSS 공격 감지!")
         xss_detected = 1
+        print("xsx_detected", xss_detected)
         payload = xss_regex.sub("[XSS Detected]", payload)
     return payload, xss_detected
